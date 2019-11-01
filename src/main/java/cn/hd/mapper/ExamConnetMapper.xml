@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="cn.hd.mapper.IExamConnet">
+	<select id="selectAll" resultType="ExamAllConnent">
+		select * from exam_allcontent,exam_type where exam_allcontent.stype = exam_type.id
+	</select>
+	
+	<select id="selectAllExamPaper" resultType="Exampaper">
+		select *,class_room.sname csname from exampaper,class_room where exampaper.hid = class_room.id		
+	</select>
+</mapper>

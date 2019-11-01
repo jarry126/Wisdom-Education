@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="cn.hd.mapper.IButton">
+	<insert id="addButton">
+		insert into button (SNAME,CREATETIME,SDESC) value(#{SNAME},#{CREATETIME},#{SDESC})
+	</insert>
+	
+	<select id="selectAll" resultType="Button">
+		select * from button
+	</select>
+	
+	
+	
+	<resultMap type="Button" id="Buttonmap">
+		<id column="BID" property="ID"/>
+		<result column="URL" property="url"/>
+	</resultMap>
+	
+	
+	
+	<select id="selectAllandurl" resultMap="Buttonmap">
+		select *,menu_button.ID menubid from button,menu_button where #{MID} = menu_button.MID and menu_button.BID = button.ID
+	</select>
+	
+	
+	
+	
+	<delete id="delete">
+		delete from button where ID=#{ID}
+	</delete>
+	
+	<resultMap type="Button" id="roleid_menuid_buttonmap">
+		<id property="ID" column="BID"/>
+	</resultMap>
+
+	<select id="roleid_menuid_button" resultMap="roleid_menuid_buttonmap">
+		select * from role_menu_button where RID = #{RID} and MID=#{MID}
+	</select>
+</mapper>

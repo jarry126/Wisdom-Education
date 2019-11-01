@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>测试json和ajax请求</title>
+<script type="text/javascript" src="/Wisdom-Education/js/jquery-3.3.1.js"></script>
+</head>
+<body>
+	
+	<button  id = "buttonclick">点击触发事件</button>
+
+	<div id="div2">
+		ssssssssssss
+	<div>
+	
+	<button id = "button2">点击触发第二个事件</button>
+	
+	<table id = "ceshi">
+		<tr id = "tr1">
+			<td>测试1</td>
+			<td>测试2</td>
+			<td>测试3</td>
+		</tr>
+
+	</table>
+	
+	
+	<form action="/Wisdom-Education/userManageHandle/test.action" method="get">
+		第一个：<input type="checkbox" name = "checkbok1" value = 1>
+		第二个：<input type="checkbox" name = "checkbok1" value = 2>
+		第三个：<input type="checkbox" name = "checkbok1" value = 3>
+		第四个：<input type="checkbox" name = "checkbok1" value = 4>
+		<input type="submit" vlaue = "提交">
+	</form>
+	
+	<!--  -->
+
+	
+	
+</body>
+<script type="text/javascript">
+	$(function(){
+		$.post("/Wisdom-Education/userManageHandle/testResponseBody.action",{"1":"1"},function(data){
+			console.log("数据返回成功："+data);
+			
+		})
+		
+	})
+	
+	
+	
+	var i = "";
+	i += "你好年后年后"+
+		"这是第二行"+
+		"这是第三行";
+
+
+
+
+$(function(){
+	$("#tr1").children().each(function(i,e){
+		console.log(i);
+		console.log($(this).text());
+	})
+	
+	
+	
+	
+	$("#buttonclick").click(function(){
+		
+		$("#div2").append("<h3 class='h3class'>插入h3</h3>")
+	})
+		
+	/* $(".h3class").on("click",function(){
+		
+		alert("ceshichgon");
+		
+	}) */
+	
+	
+		/* $(document).on("click",$("h3[class = 'h3class']"),function(){
+			alert("ceshichgon");
+		}); */
+			
+	
+		/* $.ajax({
+			type:"GET",
+			url:"/Wisdom-Education/userManageHandle/allUser.action",
+			data:"name=hello",
+			success:function(data){
+				alert("数据返回回来");
+				console.log(data);
+			}
+		})  */
+		/* 
+		$.get("/Wisdom-Education/userManageHandle/allUser.action",{"1":"1"},function(data){
+			
+			alert(data);
+		}) */
+		
+		
+	
+	
+})
+	
+	
+	
+
+</script>
+</html>

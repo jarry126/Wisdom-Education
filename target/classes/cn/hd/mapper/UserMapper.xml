@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="cn.hd.mapper.IUser">
+	
+	<!-- 添加用户 -->
+	<insert id="addUser">
+		insert into user(SNAME,SPASSWD,SEX,VALIDTIME,MOBILEPHONE,SEMAIL,DCREATETIME,DLASTLOGINTIME) value 
+		(#{SNAME},#{SPASSWD},#{SEX},#{VALIDTIME},#{MOBILEPHONE},#{SEMAIL},#{DCREATETIME},#{DLASTLOGINTIME})
+	</insert>
+	
+	<select id="findUserAll" resultType="User">
+		select * from user
+	</select>
+	
+	<delete id="deletetUser">
+		delete from user where ID=#{uid}
+	</delete>
+	
+	<update id="selectUser">
+		update user set SNAME=#{SNAME},SPASSWD=#{SPASSWD},SEX=#{SEX},VALIDTIME=#{VALIDTIME},MOBILEPHONE=#{MOBILEPHONE},SEMAIL=#{SEMAIL},DLASTLOGINTIME=#{DLASTLOGINTIME} where ID=#{ID}
+	</update>
+	
+	
+	<resultMap type="User" id="userresultmap">
+		<id property="ID" column="userid"/>
+		<result property="RID" column="RID"/>
+	</resultMap>
+	
+	<select id="userIdTorole" resultMap="userresultmap">
+		select *,user.ID userid  from user,user_role where user.ID = user_role.UID and user.ID = #{UID}
+	</select>
+	
+	<delete id="delete_user_role_uid">
+		delete from user_role where UID=#{UID}
+	</delete>
+	
+	<insert id="user_roleid">
+		insert into user_role(UID,RID) value(#{UID},#{RID})
+	</insert>
+	
+</mapper>

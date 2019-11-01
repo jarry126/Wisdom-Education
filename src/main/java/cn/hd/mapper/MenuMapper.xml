@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="cn.hd.mapper.IMenu">
+
+	<select id="selectAll" resultType="Menu">
+		select * from menu where MID=2
+	</select>
+	
+	
+	
+	<resultMap type="Menu" id="menuButtonidmap" autoMapping="true">
+		<id property="ID" column="menuid"/>
+		<result property="buttonid" column="BID"/>
+	</resultMap>
+	
+	
+	<select id="MenuIdTButton" resultMap="menuButtonidmap">
+		select *,menu.MID menumid,menu.ID menuid  from menu,menu_button where menu.ID = menu_button.MID and menu.ID = #{MID}
+	</select>
+	
+	<delete id="delete_menu_button_mid">
+		delete from menu_button where MID=#{MID}
+	</delete>
+	
+	<insert id="menu_buttonid">
+		insert into menu_button(MID,BID,URL)value(#{MID},#{BID},#{url})
+	</insert>
+	
+	<select id="selectAll_nummberone" resultType="Menu">
+		select * from menu where GRADE=0
+	
+	</select>
+	
+	<select id="parentMenu_childrenMenu" resultType="Menu">
+			select * from menu where GRADE=1 and MID = #{MID}
+	</select>
+	
+	
+	<insert id="currentid_setchildrend">
+		insert into menu(SNAME,SDESC,MID,GRADE) value(#{menuname},#{sdesc},#{MID},#{gidd})
+	</insert>
+	
+	<select id="currentid_get" resultType="Menu">
+		select * from menu where MID=#{MID}
+	
+	</select>
+	
+	<select id="testslq" resultType="Menu">
+		select * from <include refid="sqlone"/> 
+		where 1=1 
+			<if test="GRADE!=0">
+				and GRADE = 1 
+			</if>
+			<if test="MID!=0">
+				and SNAME LIKE '%管理'
+			</if>
+	</select>
+	
+	<sql id="sqlone">
+		menu 
+	</sql>
+	
+	
+</mapper>

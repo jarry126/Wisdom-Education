@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context.xsd
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop.xsd
+	http://www.springframework.org/schema/tx 
+	http://www.springframework.org/schema/tx/spring-tx.xsd
+	http://www.springframework.org/schema/mvc
+	http://www.springframework.org/schema/mvc/spring-mvc.xsd" >
+	
+	<!-- @Component、@Service、@Controller、@Repository -->
+	<!-- 自动扫描 -->
+	<context:component-scan base-package="cn.hd.service"></context:component-scan>
+	
+	 
+   <!-- 数据源 （dbcp是连接池）-->
+   <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
+    <property name="driverClassName" value="org.gjt.mm.mysql.Driver"/>
+    <property name="url" value="jdbc:mysql://localhost:3306/education?useUnicode=true&amp;characterEncoding=UTF-8"></property>
+    <property name="username" value="root"/>
+    <property name="password" value="root"/>
+  </bean>
+  
+  
+  <!-- 要开启 Spring 的事务处理功能，在 Spring 的配置文件中创建一个 DataSourceTransactionManager 对象： -->
+  <bean id="transactionManager" class=" org.springframework.jdbc.datasource.DataSourceTransactionManager">
+  <constructor-arg ref="dataSource" />
+</bean>
+
+
+  <!-- 采用@Transactional注解方式使用事务 --> 
+  
+  
+  
+  <!-- 定义Mybatis的SqlSessionFactory (可以得到SqlSession实例，可以执行相关的slq任务)--> 
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+	  <property name="dataSource" ref="dataSource" />
+	  <property name="configLocation" value="classpath:mybatis-config.xml"></property>
+	  <!-- 扫描mappers目录以及子目录下的所有xml文件 -->
+  	<property name="mapperLocations" value="classpath:cn/hd/mapper/**/*.xml" />
+	  <!-- 别名包 -->
+	  <property name="typeAliasesPackage" value="cn.hd.pojo"></property>
+	</bean>
+  
+  
+  <!-- mapper自动扫描（知道有哪些mapper  xml文件） -->
+  <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+     <property name="basePackage" value="cn.hd.mapper" />
+</bean>
+  
+
+
+	
+</beans>

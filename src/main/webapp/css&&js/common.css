@@ -1,0 +1,95 @@
+.cla_input{
+    width:8%;
+    height:34px;
+    border-radius:4px;
+    border:1px solid #c8cccf;
+}
+.f_span{
+    font-size:14px
+}
+.b_span{
+    font-size:14px;
+}
+#del_span{
+    float:right;
+    padding:0% 0.5%;
+}
+#add_span{
+    float:right;
+    padding:0% 0.5%;
+}
+#export_span{
+    float:right;
+    padding:0% 0.5%;
+}
+#th_check{
+    padding-right:10px;
+    width:1%
+}
+.btn_edit_c{
+    border:none;
+    background: rgba(255, 255, 255, 1);
+}
+#th_check_dialog{
+    padding-right:10px;
+    width:1%
+}
+
+#th_check_dialog1{
+    padding-right:10px;
+    width:1%
+}
+
+.cla_input_dialog{
+    width:170px;
+    height:34px
+}
+
+#dialog_wedth{
+    width:650px
+}
+.dialog_wedth{
+    width:650px
+}
+.cla_knob-label{
+    font-size:14px
+}
+
+.cla_t_area{
+    width:100%
+}
+
+#menu_div{
+    margin:0 auto;
+    width:60%;
+    height:300px;
+    border:1px solid rgba(0, 0, 0, 0.23);
+    overflow-y:scroll;
+}
+
+.export_span{
+    float:right;
+    padding:0% 0.5%;
+}
+
+ul{
+    list-style-type:none
+}
+
+em { font-weight: bold; padding-right: 1em;  }
+em.error {
+	background:url("../../dist/img/error.png") no-repeat 0px 0px;
+ 	padding-left: 16px;
+  	color:Red; 
+}
+em.success {
+ background:url("../../dist/img/checked.png") no-repeat 0px 0px;
+ padding-left: 16px;
+}
+
+.dialog_cla_input {
+    width: 25%;
+    height: 34px;
+    border-radius: 4px;
+    border: 1px solid #c8cccf;
+}

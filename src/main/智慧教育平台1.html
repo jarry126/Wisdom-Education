@@ -1,0 +1,2045 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!-- saved from url=(0056)http://192.168.1.106:8082/owep-admin-web-page/user/index -->
+<html style="height: auto;"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><link rel="stylesheet" href="./智慧教育平台_files/style.css">
+
+
+    <!-- 网页图标 -->
+    <link rel="shortcut icon" href="http://192.168.1.106:8082/owep-admin-web-page/images/logo.png">
+    <link rel="icon" sizes="16x16 32x32 64x64" href="http://192.168.1.106:8082/owep-admin-web-page/images/logo.png">
+    <link rel="apple-touch-icon-precomposed" href="http://192.168.1.106:8082/owep-admin-web-page/images/logo.png">
+
+	
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Cache-Control" content="no-cache, must-revalidate">
+	<meta http-equiv="Expires" content="0">
+    <!-- 网页图标 -->
+    <link rel="shortcut icon" href="http://192.168.1.106:8082/owep-admin-web-page/dist/img/logo.png">
+    <link rel="icon" sizes="16x16 32x32 64x64" href="http://192.168.1.106:8082/owep-admin-web-page/dist/img/logo.png">
+    <link rel="apple-touch-icon-precomposed" href="http://192.168.1.106:8082/owep-admin-web-page/dist/img/logo.png">
+
+	<title>智慧教育平台</title>
+	<!-- Tell the browser to be responsive to screen width -->
+	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+	<!-- Bootstrap 3.3.6 -->
+	<link rel="stylesheet" href="./智慧教育平台_files/bootstrap.min.css">
+	
+	<link rel="stylesheet" href="./智慧教育平台_files/dataTables.bootstrap.css">
+	
+	<link rel="stylesheet" href="./智慧教育平台_files/font-awesome.min.css">
+	
+	<link rel="stylesheet" href="./智慧教育平台_files/common.css">
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="./智慧教育平台_files/font-awesome.min.css">
+	<!-- Ionicons -->
+	<link rel="stylesheet" href="./智慧教育平台_files/ionicons.min.css">
+	<!-- jvectormap -->
+	<link rel="stylesheet" href="./智慧教育平台_files/jquery-jvectormap-1.2.2.css">
+	<!-- Theme style -->
+	<link rel="stylesheet" href="./智慧教育平台_files/AdminLTE.css">
+	<link rel="stylesheet" href="./智慧教育平台_files/_all-skins.css">
+	<!-- 选择搜索 -->
+	<link rel="stylesheet" type="text/css" href="./智慧教育平台_files/bootstrap-select.css">
+	<script type="text/javascript">	    
+	    /* websocket:start */
+		var urlArr = document.URL.split("/");//[0]:"http:",[1]:"",[2]:localhost:8080,[3]:owepbbs-web
+		var path=urlArr[2]+"/"+urlArr[3]+"/";
+		var tbUser="com.hd.owep.bean.TbUser@79c0a322";
+		var userId="";
+		if(tbUser!=""){
+			userId=126;
+		}
+		if(userId==""){//未登录
+			//$("#messageArea").hide();
+		}else{
+			var fromId=userId;
+	
+			var websocket;
+			if ('WebSocket' in window) {
+				websocket = new WebSocket("ws://" + path + "/ws?userId="+fromId);
+			} else if ('MozWebSocket' in window) {
+				websocket = new MozWebSocket("ws://" + path + "/ws"+fromId);
+			} else {
+				websocket = new SockJS("http://" + path + "/ws/sockjs"+fromId);
+			}
+			websocket.onopen = function(event) {
+				console.log("WebSocket:已连接");
+				console.log(event);
+				//$("#msgCountArea").text("");
+				//$("#msgCountArea2").text("0");
+			};
+			websocket.onmessage = function(event) {
+				var data=JSON.parse(event.data);
+				console.log("WebSocket:收到一条消息",data);
+				//通知图标显示
+				//$("#messageArea").show();
+				//登录之后系统推送一条未读消息数量的信息到这里
+				//$("#msgCountArea").text(data.msgCount=="0"?"":data.msgCount);
+				//$("#msgCountArea2").text(data.msgCount);
+				$("#noticeMSG").empty();
+				for(var i=0;i<data.noticeList.length;i++){
+					var content=data.noticeList[i].msgContent;
+					if(content.length>20){
+						content=data.noticeList[i].msgContent.substring(0,20)+"...";
+					}
+					var title=data.noticeList[i].msgTitle;
+					if(title.length>8){
+						title=data.noticeList[i].msgTitle.substring(0,6)+"..."
+					}
+					var li='<li>'
+					+'<a href="javascript:messageDetail('+data.noticeList[i].msgId+');">'
+					/* +'	<div class="pull-left">'
+					+'		<img src="../dist/img/user2-160x160.jpg" id="imgcircle" class="img-circle" alt="User Image">'
+					+'	</div>' */
+					+'	<h4 style="margin:0;">'
+					+		title
+					+'		<small><i class="fa fa-clock-o"></i> '+data.noticeList[i].createtime+'</small>'
+					+'	</h4>'
+					+'	<p style="margin:0;">'+content+'</p>'
+					+'</a>'
+					+'</li>';					
+	            	$("#noticeMSG").append(li)
+				}
+			};
+			websocket.onerror = function(event) {
+				console.log("WebSocket:发生错误 ");
+				console.log(event);
+				$("#msgCountArea").text("");
+				$("#msgCountArea2").text("0");
+			};
+			websocket.onclose = function(event) {
+				console.log("WebSocket:已关闭");
+				console.log(event);
+			}
+		}
+	    /* websocket:end */
+	</script>
+<style>
+    .container
+    {
+      position: absolute;
+      top: 5%; left: 36%; right: 0; bottom: 0;
+    }
+    .action
+    {
+      width: 400px;
+      height: 30px;
+      margin: 10px 0;
+    }
+    .cropped>img
+    {
+      margin-right: 10px;
+    }
+    
+    .imageBox
+{
+    position: relative;
+    height: 400px;
+    width: 400px;
+    border:1px solid #aaa;
+    background: #fff;
+    overflow: hidden;
+    background-repeat: no-repeat;
+    cursor:move;
+}
+
+.imageBox .thumbBoxHead
+{
+    /*娉ㄦ剰锛?
+    left=(400-width)/2 px
+    top=(400-height)/2 px*/
+    position: absolute;
+    left: 50px;
+    top: 50px;
+    width: 300px;
+    height: 300px;
+    /*margin-top: -104px;*/
+    /*margin-left: -116px;*/
+    box-sizing: border-box;
+    border: 1px solid rgb(102, 102, 102);
+    box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.5);
+    background: none repeat scroll 0% 0% transparent;
+}
+    
+    
+  </style><link type="text/css" rel="stylesheet" href="./智慧教育平台_files/laydate.css"><link type="text/css" rel="stylesheet" href="./智慧教育平台_files/laydate(1).css" id="LayDateSkin"><style type="text/css">.jqstooltip { position: absolute;left: 0px;top: 0px;visibility: hidden;background: rgb(0, 0, 0) transparent;background-color: rgba(0,0,0,0.6);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000);-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";color: white;font: 10px arial, san serif;text-align: left;white-space: nowrap;padding: 5px;border: 1px solid white;z-index: 10000;}.jqsfield { color: white;font: 10px arial, san serif;text-align: left;}</style></head>
+  
+  
+  
+<body class="skin-blue sidebar-mini" style="overflow: scroll; height: auto;">
+<div id="lodingbg" style="position:fixed; width:100%;height:100%;z-index:1040;background:rgba(212,215,218,0.5);display:none;"></div>
+<div id="lodingimg" style="position: fixed; right:50%;bottom:50%;width:64px;height:64px;z-index: 1050;display:none;"><img src="./智慧教育平台_files/wait.jpg"></div>
+
+<div class="wrapper" style="height: auto;">
+
+  <header class="main-header">
+   
+    <!-- Logo --><!-- background-size: 50px 50px; border-bottom: 0 solid transparent; -->
+    <a id="systemtp" class="logo" style="background: url(&#39;/owep-admin-web-page/image/getImage?imageUrl=/opt/image//owepWeb/systemImage/owep-system.jpg&amp;t=0.9009103006076408&#39;); ">
+      <!-- mini logo for sidebar mini 50x50 pixels -->
+      <span class="logo-mini"></span>
+      <!-- logo for regular state and mobile devices -->
+      <span class="logo-lg"></span>
+    </a>
+
+    <!-- Header Navbar: style can be found in header.less -->
+    <nav class="navbar navbar-static-top">
+      <!-- Sidebar toggle button-->
+      <a href="http://192.168.1.106:8082/owep-admin-web-page/user/index#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+        <span class="sr-only">Toggle navigation</span>
+      </a>
+      <!-- Navbar Right Menu -->
+      <div class="navbar-custom-menu">
+        <ul class="nav navbar-nav">
+          <!-- Messages: style can be found in dropdown.less-->
+            <!-- 消息私信 -->
+          
+          <!-- Notifications: style can be found in dropdown.less -->
+          <li class="dropdown notifications-menu">
+          <!--   <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <i class="fa fa-bell-o"></i>
+              <span class="label label-warning">10</span>
+            </a> -->
+            <ul class="dropdown-menu">
+              <li class="header">You have 10 notifications</li>
+              <li>
+                <!-- inner menu: contains the actual data -->
+                <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 200px;"><ul class="menu" style="overflow: hidden; width: 100%; height: 200px;">
+                  <li>
+                    <a href="http://192.168.1.106:8082/owep-admin-web-page/user/index#">
+                      <i class="fa fa-users text-aqua"></i> 5 new members joined today
+                    </a>
+                  </li>
+                  <li>
+                    <a href="http://192.168.1.106:8082/owep-admin-web-page/user/index#">
+                      <i class="fa fa-warning text-yellow"></i> Very long description here that may not fit into the
+                      page and may cause design problems
+                    </a>
+                  </li>
+                  <li>
+                    <a href="http://192.168.1.106:8082/owep-admin-web-page/user/index#">
+                      <i class="fa fa-users text-red"></i> 5 new members joined
+                    </a>
+                  </li>
+                  <li>
+                    <a href="http://192.168.1.106:8082/owep-admin-web-page/user/index#">
+                      <i class="fa fa-shopping-cart text-green"></i> 25 sales made
+                    </a>
+                  </li>
+                  <li>
+                    <a href="http://192.168.1.106:8082/owep-admin-web-page/user/index#">
+                      <i class="fa fa-user text-red"></i> You changed your username
+                    </a>
+                  </li>
+                </ul><div class="slimScrollBar" style="background: rgb(0, 0, 0); width: 3px; position: absolute; top: 0px; opacity: 0.4; display: block; border-radius: 7px; z-index: 99; right: 1px;"></div><div class="slimScrollRail" style="width: 3px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 7px; background: rgb(51, 51, 51); opacity: 0.2; z-index: 90; right: 1px;"></div></div>
+              </li>
+              <li class="footer"><a href="http://192.168.1.106:8082/owep-admin-web-page/user/index#">View all</a></li>
+            </ul>
+          </li>
+          <!-- Tasks: style can be found in dropdown.less -->
+          <li class="dropdown tasks-menu">
+          <!--   <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <i class="fa fa-flag-o"></i>
+              <span class="label label-danger">9</span>
+            </a> -->
+            <ul class="dropdown-menu">
+              <li class="header">You have 9 tasks</li>
+              <li>
+                <!-- inner menu: contains the actual data -->
+                <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 200px;"><ul class="menu" style="overflow: hidden; width: 100%; height: 200px;">
+                  <li><!-- Task item -->
+                    <a href="http://192.168.1.106:8082/owep-admin-web-page/user/index#">
+                      <h3>
+                        Design some buttons
+                        <small class="pull-right">20%</small>
+                      </h3>
+                      <div class="progress xs">
+                        <div class="progress-bar progress-bar-aqua" style="width: 20%" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                          <span class="sr-only">20% Complete</span>
+                        </div>
+                      </div>
+                    </a>
+                  </li>
+                  <!-- end task item -->
+                  <li><!-- Task item -->
+                    <a href="http://192.168.1.106:8082/owep-admin-web-page/user/index#">
+                      <h3>
+                        Create a nice theme
+                        <small class="pull-right">40%</small>
+                      </h3>
+                      <div class="progress xs">
+                        <div class="progress-bar progress-bar-green" style="width: 40%" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                          <span class="sr-only">40% Complete</span>
+                        </div>
+                      </div>
+                    </a>
+                  </li>
+                  <!-- end task item -->
+                  <li><!-- Task item -->
+                    <a href="http://192.168.1.106:8082/owep-admin-web-page/user/index#">
+                      <h3>
+                        Some task I need to do
+                        <small class="pull-right">60%</small>
+                      </h3>
+                      <div class="progress xs">
+                        <div class="progress-bar progress-bar-red" style="width: 60%" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                          <span class="sr-only">60% Complete</span>
+                        </div>
+                      </div>
+                    </a>
+                  </li>
+                  <!-- end task item -->
+                  <li><!-- Task item -->
+                    <a href="http://192.168.1.106:8082/owep-admin-web-page/user/index#">
+                      <h3>
+                        Make beautiful transitions
+                        <small class="pull-right">80%</small>
+                      </h3>
+                      <div class="progress xs">
+                        <div class="progress-bar progress-bar-yellow" style="width: 80%" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                          <span class="sr-only">80% Complete</span>
+                        </div>
+                      </div>
+                    </a>
+                  </li>
+                  <!-- end task item -->
+                </ul><div class="slimScrollBar" style="background: rgb(0, 0, 0); width: 3px; position: absolute; top: 0px; opacity: 0.4; display: block; border-radius: 7px; z-index: 99; right: 1px;"></div><div class="slimScrollRail" style="width: 3px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 7px; background: rgb(51, 51, 51); opacity: 0.2; z-index: 90; right: 1px;"></div></div>
+              </li>
+              <li class="footer">
+                <a href="http://192.168.1.106:8082/owep-admin-web-page/user/index#">View all tasks</a>
+              </li>
+            </ul>
+          </li>
+          <!-- User Account: style can be found in dropdown.less -->
+          <li class="dropdown user user-menu">
+            <a href="http://192.168.1.106:8082/owep-admin-web-page/user/index#" class="dropdown-toggle" data-toggle="dropdown">
+            
+                 <img src="./智慧教育平台_files/getImage" style="display: block;" id="txuserimg" class="user-image" alt="User Image">            
+            
+                  <img src="http://192.168.1.106:8082/owep-admin-web-page/user/index" style="display: none;" id="txuserimg2" class="user-image" alt="User Image">            
+             <span class="hidden-xs">admin</span>
+            </a>
+            <ul class="dropdown-menu">
+              <!-- User image -->
+              <li class="user-header">
+              
+                <img src="./智慧教育平台_files/getImage" id="imgcircle1" style="display: block;" class="img-circle" alt="User Image">
+              
+                <img src="./智慧教育平台_files/tx.png" id="imgcircle2" style="display: none;" class="img-circle" alt="User Image">
+                <p>
+                  admin 
+                    - 
+                  管理员                                    
+                                                       
+                </p>
+              </li>
+              <!-- Menu Body -->
+              <!-- Menu Footer-->
+              <li class="user-footer">
+              
+              
+                 <div class="pull-left">
+                  <a href="http://192.168.1.106:8082/owep-admin-web-page/user/index#" onclick="personal();" class="btn btn-default btn-flat">个人设置</a>
+                </div>
+                <div class="pull-right">
+                  <a href="http://192.168.1.106:8082/owep-admin-web-page/user/index#" id="userTp" class="btn btn-default btn-flat">头像设置</a>
+                  <!-- onclick="txPersonal();" -->
+                </div> 
+              </li>
+            </ul>
+          </li>
+
+
+          <!--自定义 退出 start-->
+          <li class="dropdown user user-menu">
+            <a href="http://192.168.1.106:8082/owep-admin-web-page/user/exitSystem">退出</a>
+            <!--  <a href="#" id="sessionDel">删除session</a>  -->
+              <!--<span class="hidden-xs">sign out</span>-->
+            
+          </li>
+          <!--自定义 退出 end-->
+          <!-- Control Sidebar Toggle Button -->
+          <li>
+            <a href="http://192.168.1.106:8082/owep-admin-web-page/user/index#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
+          </li>
+        </ul>
+      </div>
+
+    </nav>
+  </header>
+  <!-- Left side column. contains the logo and sidebar -->
+  <aside class="main-sidebar">
+    <!-- sidebar: style can be found in sidebar.less -->
+    <section class="sidebar" style="height: auto;">
+      <ul class="sidebar-menu">
+       
+        <li class="treeview">
+          <a href="http://192.168.1.106:8082/owep-admin-web-page/user/index#">
+            <i class="fa fa-dashboard" id="pzinfo"></i> <span>系统配置</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu" style="display: none;">
+          
+              <li class="bandcla"><a href="javascript:view(&#39;/system/toSystemDirect&#39;);"><i class="fa fa-circle-o"></i> 参数信息</a></li>
+           
+           
+              <li class="bandcla"><a href="javascript:view(&#39;/image/uploadImageForward&#39;)"><i class="fa fa-circle-o"></i> 资料配置</a></li>
+            
+            
+			  <li class="bandcla"><a href="javascript:view(&#39;/dbBackup/findBackUpInfoforWord&#39;)"><i class="fa fa-circle-o"></i> 数据库备份</a></li>
+			
+          </ul>
+        </li>
+       
+       
+        <li class="treeview">
+          <a href="http://192.168.1.106:8082/owep-admin-web-page/user/index#">
+            <i class="fa fa-files-o"></i>
+            <span>用户管理</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+           
+              <li class="bandcla"><a href="javascript:view(&#39;/user/userpage?usertype=1&#39;)"><i class="fa fa-circle-o"></i> 管理员管理</a></li>
+            
+            
+            <li class="bandcla"><a href="javascript:view(&#39;/user/userpage?usertype=3&#39;)"><i class="fa fa-circle-o"></i> 学生管理</a></li>
+            
+            
+            <li class="bandcla"><a href="javascript:view(&#39;/user/userpage?usertype=2&#39;)"><i class="fa fa-circle-o"></i> 教师管理</a></li>
+            
+           
+            <li class="bandcla"><a href="javascript:view(&#39;/user/userpage?usertype=4&#39;)"><i class="fa fa-circle-o"></i> 咨询师管理</a></li>
+            
+          </ul>
+        </li>
+      
+       
+        <li class="treeview">
+          <a href="http://192.168.1.106:8082/owep-admin-web-page/user/index#">
+            <i class="fa fa-unlock"></i>
+            <span>权限管理</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+          
+            <li class="bandcla"><a href="javascript:view(&#39;/group/toGroup&#39;)"><i class="fa fa-circle-o"></i> 用户组管理</a></li>
+          
+          
+            <li class="bandcla"><a href="javascript:view(&#39;/role/toRole&#39;)"><i class="fa fa-circle-o"></i> 角色管理</a></li>
+          
+          
+            <li class="bandcla"><a href="javascript:view(&#39;/permission/toPermission&#39;)"><i class="fa fa-circle-o"></i> 角色权限</a></li>
+          
+           
+            <li class="bandcla"><a href="javascript:view(&#39;/menu/toMenuAction&#39;)"><i class="fa fa-circle-o"></i> 菜单行为</a></li>
+          
+          
+            <li class="bandcla"><a href="javascript:view(&#39;/menu/toMenu&#39;)"><i class="fa fa-circle-o"></i> 菜单管理</a></li>
+          
+          
+            <li class="bandcla"><a href="javascript:view(&#39;/action/toAction&#39;)"><i class="fa fa-circle-o"></i> 行为管理</a></li>
+          
+          
+          </ul>
+        </li>
+       
+        
+        <li class="treeview">
+          <a href="http://192.168.1.106:8082/owep-admin-web-page/user/index#">
+            <i class="fa fa-laptop"></i>
+            <span>组织机构</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+          
+            <li class="bandcla"><a href="javascript:view(&#39;/institu/institu&#39;)"><i class="fa fa-circle-o"></i> 机构列表</a></li>
+          
+          
+            <li class="bandcla"><a href="javascript:view(&#39;/institu/childInstitu&#39;)"><i class="fa fa-circle-o"></i> 分支机构</a></li>
+          
+          </ul>
+        </li>
+       
+       
+        <li class="treeview">
+          <a href="http://192.168.1.106:8082/owep-admin-web-page/user/index#">
+            <i class="fa fa-edit"></i> <span>资源管理</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+           
+            <li class="bandcla"><a href="javascript:view(&#39;/type/toType&#39;)"><i class="fa fa-circle-o"></i> 资源类型</a></li>
+           
+           
+            <li class="bandcla"><a href="javascript:view(&#39;/resouManage/toResouManage&#39;)"><i class="fa fa-circle-o"></i> 资源浏览</a></li>
+           
+          </ul>
+        </li>
+       
+       
+        <li class="treeview">
+          <a href="http://192.168.1.106:8082/owep-admin-web-page/user/index#">
+            <i class="fa fa-table"></i> <span>培养方案</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+          
+            <li class="bandcla"><a href="javascript:view(&#39;/plan/toPlan&#39;)"><i class="fa fa-circle-o"></i> 方案列表</a></li>
+          
+          
+            <li class="bandcla"><a href="javascript:view(&#39;/plan/toCourse&#39;)"><i class="fa fa-circle-o"></i> 课程列表</a></li>
+          
+          
+            <li class="bandcla"><a href="javascript:view(&#39;/courseItem/toCourseItem&#39;)"><i class="fa fa-circle-o"></i> 课程分类</a></li>
+          
+          </ul>
+        </li>
+       
+       
+        <li class="treeview">
+          <a href="http://192.168.1.106:8082/owep-admin-web-page/user/index#">
+            <i class="fa fa-folder"></i> <span>班级管理</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+          
+            <li class="bandcla"><a href="javascript:view(&#39;/professional/toProfe&#39;)"><i class="fa fa-circle-o"></i> 专业方向</a></li>
+          
+           
+            <li class="bandcla"><a href="javascript:view(&#39;/classlist/toClassList&#39;)"><i class="fa fa-circle-o"></i> 班级列表</a></li>
+           
+            <!--<li class="bandcla"><a href="javascript:view('classmanage/classresource.html')"><i class="fa fa-circle-o"></i> 班级资源</a></li>-->
+            
+            <li class="bandcla"><a href="javascript:view(&#39;/classproblem/toClassProblem&#39;)"><i class="fa fa-circle-o"></i> 班级问题</a></li>
+            
+            
+            <li class="bandcla"><a href="javascript:view(&#39;/homework/toHomework&#39;)"><i class="fa fa-circle-o"></i> 布置作业</a></li>
+          
+             
+            <li class="bandcla"><a href="javascript:view(&#39;/rate/toRate&#39;)"><i class="fa fa-circle-o"></i> 学习进度</a></li>
+            
+          </ul>
+        </li>
+       
+        
+        <li class="treeview">
+          <a href="http://192.168.1.106:8082/owep-admin-web-page/user/index#">
+            <i class="fa fa-tumblr"></i> <span>授课管理</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+           
+            <li class="bandcla"><a href="javascript:view(&#39;/teaching/toTeaching&#39;)"><i class="fa fa-circle-o"></i> 课堂教学</a></li>
+           
+          </ul>
+        </li>
+       
+       
+        <li class="treeview">
+          <a href="http://192.168.1.106:8082/owep-admin-web-page/user/index#">
+            <i class="fa fa-vimeo-square"></i> <span>通知公告</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+          
+            <li class="bandcla"><a href="javascript:view(&#39;/annount/toAnnount&#39;)"><i class="fa fa-circle-o"></i> 发布公告</a></li>
+          
+          
+            <li class="bandcla"><a href="javascript:view(&#39;/annount/toAnnountList&#39;)"><i class="fa fa-circle-o"></i> 公告列表</a></li>
+          
+          
+             <li class="bandcla"><a href="javascript:view(&#39;/annount/toNewInfoList&#39;)"><i class="fa fa-circle-o"></i> 新闻资讯</a></li>
+          
+          </ul>
+        </li>
+       
+       
+        <li class="treeview">
+          <a href="http://192.168.1.106:8082/owep-admin-web-page/user/index#">
+            <i class="fa fa-reorder"></i> <span>考试管理</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+          
+            <li class="bandcla"><a href="javascript:view(&#39;/paper/toPaperQuesb&#39;)"><i class="fa fa-circle-o"></i> 题库管理</a></li>
+          
+          
+            <li class="bandcla"><a href="javascript:view(&#39;/paper/toPaper&#39;)"><i class="fa fa-circle-o"></i> 试卷管理</a></li>
+          
+         
+            <li class="bandcla"><a href="javascript:view(&#39;/paper/toStudentpaperscore&#39;)"><i class="fa fa-circle-o"></i> 考试汇总</a></li>
+         
+          </ul>
+        </li>
+      
+       
+        <li class="treeview">
+          <a href="http://192.168.1.106:8082/owep-admin-web-page/user/index#">
+            <i class="fa  fa-male"></i> <span>考评管理</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+          
+            <li class="bandcla"><a href="javascript:view(&#39;/appra/toAppra&#39;)"><i class="fa fa-circle-o"></i> 考评选项</a></li>
+          
+          
+            <li class="bandcla"><a href="javascript:view(&#39;/appra/toTemplate&#39;)"><i class="fa fa-circle-o"></i> 考评模板</a></li>
+          
+          
+            <li class="bandcla"><a href="javascript:view(&#39;/appra/toTeacherAppra&#39;)"><i class="fa fa-circle-o"></i> 教师考评</a></li>
+          
+          </ul>
+        </li>
+      
+      
+        <li class="treeview">
+          <a href="http://192.168.1.106:8082/owep-admin-web-page/user/index#">
+            <i class="fa  fa-dribbble"></i> <span>数据分析</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+              
+                  <li class="bandcla"><a href="javascript:view(&#39;/classReport/toClassReport&#39;)"><i class="fa fa-circle-o"></i> 班级统计</a></li>
+              
+              
+                  <li class="bandcla"><a href="javascript:view(&#39;/videoRecord/toVideoRecord&#39;)"><i class="fa fa-circle-o"></i> 学生观看记录</a></li>
+              
+          </ul>
+        </li>
+      
+      
+      
+        <li class="treeview">
+          <a href="http://192.168.1.106:8082/owep-admin-web-page/user/index#">
+            <i class="fa  fa-dribbble"></i> <span>咨询管理</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+             
+            <li class="bandcla"><a href="javascript:view(&#39;/advice/findAdviceInfo&#39;)"><i class="fa fa-circle-o"></i> 建议咨询</a></li>
+              
+          </ul>
+        </li>
+      
+      
+      
+        <li class="treeview">
+          <a href="http://192.168.1.106:8082/owep-admin-web-page/user/index#">
+            <i class="fa  fa-dribbble"></i> <span>操作日志</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+             
+            <li class="bandcla"><a href="javascript:view(&#39;/syslog/toSyslogList&#39;)"><i class="fa fa-circle-o"></i> 日志列表</a></li>
+              
+          </ul>
+        </li>
+      
+      
+      
+       <li class="treeview">
+          <a href="http://192.168.1.106:8082/owep-admin-web-page/user/index#">
+            <i class="fa  fa-dribbble"></i> <span>评鉴管理</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+             
+            <li class="bandcla"><a href="javascript:view(&#39;/evat/findEvationInfo&#39;)"><i class="fa fa-circle-o"></i>评鉴设置</a></li>
+              
+          </ul>
+        </li>
+      
+      
+      
+       <li class="treeview">
+          <a href="http://192.168.1.106:8082/owep-admin-web-page/user/index#">
+            <i class="fa  fa-dribbble"></i> <span>意向客户</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+         
+          
+            <li class="bandcla"><a href="javascript:view(&#39;/client/findClient&#39;)"><i class="fa fa-circle-o"></i>客户列表</a></li>
+          
+          
+            <li class="bandcla"><a href="javascript:view(&#39;/client/clientChart&#39;)"><i class="fa fa-circle-o"></i>数据报表</a></li>
+           
+          
+           
+            <!-- <li class="bandcla"><a href="javascript:view('/client/clientSeat')"><i class="fa fa-circle-o"></i>座位选择</a></li> -->
+         
+         <!-- <li class="bandcla"><a href="javascript:view('/client/toSalesPage')"><i class="fa fa-circle-o"></i>数据报表2</a></li> -->
+         
+          </ul>
+        </li>
+       
+      
+      </ul>
+    </section>
+    <!-- /.sidebar -->
+  </aside>
+
+  <!-- Content Wrapper. Contains page content -->
+  <div id="ifram" class="content-wrapper" style="min-height: 854px;">
+
+
+
+
+<script type="text/javascript" charset="utf-8" src="./智慧教育平台_files/commonDate.js.下载"></script>
+
+
+
+
+<div>
+    <section class="content-header">
+      <h1>
+        数据库备份
+        
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="http://192.168.1.106:8082/owep-admin-web-page/user/index#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li><a href="http://192.168.1.106:8082/owep-admin-web-page/user/index#">系统配置</a></li>
+        <li class="active">数据库备份</li>
+      </ol>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+    
+    <div id="lodingbg" style="position:fixed; width:100%;height:100%;z-index:1040;background:rgba(212,215,218,0.5);display:none;"></div>
+<div id="lodingimg" style="position: fixed; right:50%;bottom:50%;width:64px;height:64px;z-index: 1050;display:none;"><img src="./智慧教育平台_files/wait.jpg"></div>
+    
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="box">
+            <!-- /.box-header -->
+            <div class="box-body">
+			
+			<div style="font-weight:700">
+			
+			  <span class="b_span">开始时间: <input class="cla_input " id="ser_effdataS" onclick="laydate({elem: &#39;#ser_effdataS&#39;, istime: true, format: &#39;YYYY-MM-DD&#39;})" name="LastName" value="" readonly="readonly"></span>
+		      <span class="b_span">结束时间: <input class="cla_input " id="ser_effdataE" onclick="laydate({elem: &#39;#ser_effdataE&#39;, istime: true, format: &#39;YYYY-MM-DD&#39;})" name="LastName" value="" readonly="readonly"></span>
+                <span><button type="button" id="Search" class="btn btn-primary">查询</button></span>
+				<span id="add_span">
+				   <button type="button" id="dbBack" class="btn btn-primary">备份</button>
+				</span>
+				<span id="add_span">
+				    <button type="button" id="dbDel" class="btn btn-primary">删除</button>
+				</span>
+				<br>
+				<br>
+			</div>
+				
+			
+			
+              <div id="example1_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer"><div class="row"><div class="col-sm-6"><div class="dataTables_length" id="example1_length"><label>显示 <select name="example1_length" aria-controls="example1" class="form-control input-sm"><option value="10">10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option></select> 项结果</label></div></div><div class="col-sm-6"></div></div><div class="row"><div class="col-sm-12"><table id="example1" class="table table-bordered table-striped dataTable no-footer" role="grid" aria-describedby="example1_info">
+                <thead>
+                <tr role="row"><th id="th_check" class="sorting_disabled" rowspan="1" colspan="1"><input id="checkAll" type="checkbox"></th><th class="sorting_disabled" rowspan="1" colspan="1">文件名</th><th class="sorting_disabled" rowspan="1" colspan="1">备份时间</th><th class="sorting_disabled" rowspan="1" colspan="1">状态</th><th rowspan="1" colspan="1">操作</th></tr>
+                </thead>
+                <tbody>
+                <tr role="row" class="odd"><td><input type="checkbox" class="checkSub" value="14"></td><td>owep_20190402151850425.sql</td><td><div>2019-04-01 15:18:53</div></td><td><div>成功</div></td><td><button type="button" onclick="delDB(14)" data-toggle="tooltip" data-placement="top" title="删除" class="btn_edit_c text-red glyphicon glyphicon-trash"></button><button type="button" onclick="updateDB(14)" data-toggle="tooltip" data-placement="top" title="下载" class="btn_edit_c text-purple fa fa-download"></button></td></tr><tr role="row" class="even"><td><input type="checkbox" class="checkSub" value="13"></td><td>owep_20190401175339588.sql</td><td><div>2019-04-01 17:53:44</div></td><td><div>成功</div></td><td><button type="button" onclick="delDB(13)" data-toggle="tooltip" data-placement="top" title="删除" class="btn_edit_c text-red glyphicon glyphicon-trash"></button><button type="button" onclick="updateDB(13)" data-toggle="tooltip" data-placement="top" title="" class="btn_edit_c text-purple fa fa-download" data-original-title="下载"></button></td></tr><tr role="row" class="odd"><td><input type="checkbox" class="checkSub" value="12"></td><td>owep_2019010815404555.sql</td><td><div>2019-03-13 15:40:46</div></td><td><div>成功</div></td><td><button type="button" onclick="delDB(12)" data-toggle="tooltip" data-placement="top" title="删除" class="btn_edit_c text-red glyphicon glyphicon-trash"></button><button type="button" onclick="updateDB(12)" data-toggle="tooltip" data-placement="top" title="" class="btn_edit_c text-purple fa fa-download" data-original-title="下载"></button></td></tr><tr role="row" class="even"><td><input type="checkbox" class="checkSub" value="11"></td><td>owep_20190108144933565.sql</td><td><div>2019-01-07 14:49:34</div></td><td><div>成功</div></td><td><button type="button" onclick="delDB(11)" data-toggle="tooltip" data-placement="top" title="删除" class="btn_edit_c text-red glyphicon glyphicon-trash"></button><button type="button" onclick="updateDB(11)" data-toggle="tooltip" data-placement="top" title="下载" class="btn_edit_c text-purple fa fa-download"></button></td></tr></tbody>
+              </table><div id="example1_processing" class="dataTables_processing" style="display: none;">处理中...</div></div></div><div class="row"><div class="col-sm-5"><div class="dataTables_info" id="example1_info" role="status" aria-live="polite">显示第 1 至 4 项结果，共 4 项</div></div><div class="col-sm-7"><div class="dataTables_paginate paging_simple_numbers" id="example1_paginate"><ul class="pagination"><li class="paginate_button previous disabled" id="example1_previous"><a href="http://192.168.1.106:8082/owep-admin-web-page/user/index#" aria-controls="example1" data-dt-idx="0" tabindex="0">上页</a></li><li class="paginate_button active"><a href="http://192.168.1.106:8082/owep-admin-web-page/user/index#" aria-controls="example1" data-dt-idx="1" tabindex="0">1</a></li><li class="paginate_button next disabled" id="example1_next"><a href="http://192.168.1.106:8082/owep-admin-web-page/user/index#" aria-controls="example1" data-dt-idx="2" tabindex="0">下页</a></li></ul></div></div></div></div>
+            </div>
+            <!-- /.box-body -->
+          </div>
+          <!-- /.box -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+    </section>
+    <!-- /.content -->
+
+
+</div>
+<!-- ./wrapper -->
+
+<!-- DataTables -->
+<script src="./智慧教育平台_files/jquery.dataTables.min.js.下载"></script>
+<script src="./智慧教育平台_files/dataTables.bootstrap.min.js.下载"></script>
+<script>
+var table;
+
+//删除角色
+function delDB(dbcopyId){
+	
+	$.ajax({
+		type:"GET",
+		  url:'/owep-admin-web-page/user/findUserSession',
+		  dataType: "json",
+		  success: function (data) {
+			  if(data.statusCode == 202){
+				     window.location.href = "/owep-admin-web-page/user/loginUser";
+				     return false;
+				}
+			  
+				Confirm.show('提示', '确定删除吗？', {
+			        '确定': {
+			            'primary': true,
+			            'callback': function() {
+			           	 	Confirm.hide();
+					    	$.ajax({
+					            type: "POST",
+					            url: '/owep-admin-web-page/dbBackup/deletedb',
+					            data: {
+					                dbcopyId:dbcopyId
+					            	},
+					            dataType: "json",
+					            success: function(data){
+					            	if(data.statusCode == 200){
+					            		$("#example1").DataTable().ajax.reload();
+					            	}else{
+					            		Confirm.show('提示', '删除失败！')
+					            	}
+					              }
+					        });
+			            }
+			        }
+			    }); 
+			  
+			  
+		  }
+	});
+	
+
+}
+
+/**
+ * 	var actionIds = new Array();
+	$(".checkSub").each(function(){    		
+		if (this.checked){
+			actionIds.push($(this).val());
+		}
+	});
+	if(actionIds == null || actionIds ==""){
+		Confirm.show('提示', '请选择一行！');
+		return false;
+	}
+ */
+
+//批量删除
+	var a = new Array();
+$("#dbDel").click(function(){
+	
+	$.ajax({
+		type:"GET",
+		  url:'/owep-admin-web-page/user/findUserSession',
+		  dataType: "json",
+		  success: function (data) {
+			  if(data.statusCode == 202){
+				     window.location.href = "/owep-admin-web-page/user/loginUser";
+				     return false;
+				}
+			  
+			  $(".checkSub").each(function(){    		
+					if (this.checked){
+						a.push($(this).val());
+					}
+				});
+				if(a == null || a ==""){
+					Confirm.show('提示', '请选择一行！');
+					return false;
+				}
+				Confirm.show('提示', '确定删除吗？', {
+			        '确定': {
+			            'primary': true,
+			            'traditional': true,
+			            'callback': function() {
+			           	 	Confirm.hide();
+			           	 	$.ajax({
+					            type: "GET",
+					            url: '/owep-admin-web-page/dbBackup/batchDbcopyDel?id='+a,
+					            dataType: "json",
+					            success: function(data){
+					            	a.splice(0, a.length);
+					            	console.log(a);
+					            	$("#example1").DataTable().ajax.reload();
+					              }
+					        });
+					    	
+			            }
+			        }
+			    });
+			  
+			  
+		  }
+	});
+	
+	
+});
+
+
+//数据库备份下载
+function updateDB(dbcopyId){
+	
+	$.ajax({
+		  type:"GET",
+		  url:'/owep-admin-web-page/user/findUserSession',
+		  dataType: "json",
+		  success: function (data) {
+			  if(data.statusCode == 202){
+				     window.location.href = "/owep-admin-web-page/user/loginUser";
+				     return false;
+				}
+			  
+				Confirm.show('提示', '确定下载吗？', {
+			        '确定': {
+			            'primary': true,
+			            'callback': function() {
+			           	 	Confirm.hide();
+					    	$.ajax({
+					            type: "POST",
+					            url: '/owep-admin-web-page/dbBackup/downloadDb',
+					            data: {
+					                dbcopyId:dbcopyId
+					            	},
+					            dataType: "json",
+					            success: function(data){
+					            	if(data.statusCode == 200){
+					            		//var fileUrl="/owep-admin-web-page/dbBackup/owepBathDown?path="+dataReult; 
+					            		//window.open(fileUrl);
+					            		var dataReult =data.result;
+				            		    var elemIF = document.createElement("iframe");   
+				            	        elemIF.src = "/owep-admin-web-page/dbBackup/owepBathDownFile?path="+dataReult;
+				            	        elemIF.style.display = "none";   
+				            	        document.body.appendChild(elemIF); 
+					            	}else{
+					            		Confirm.show('提示', '下载失败！')
+					            	}
+					              }
+					        });
+			            }
+			        }
+			    });
+			  
+			  
+		  }
+	});
+
+}
+
+
+  $(function () {
+	  var startTime ='';
+	  var endTime ='';
+	   $('#Search').click(function(){
+		   $.ajax({
+			   type:"GET",
+				  url:'/owep-admin-web-page/user/findUserSession',
+				  dataType: "json",
+				  success: function (data) {
+					  if(data.statusCode == 202){
+						     window.location.href = "/owep-admin-web-page/user/loginUser";
+						     return false;
+						}
+					   startTime = $("#ser_effdataS").val();
+					   endTime =$("#ser_effdataE").val();
+					   if(startTime > endTime){
+						   Confirm.show('提示', '开始时间不能大于结束时间！');
+						   $("#ser_effdataS").val("");
+						   $("#ser_effdataE").val("");
+					   }else{
+						   $("#example1").DataTable().ajax.reload();
+						   $("#ser_effdataS").val("");
+						   $("#ser_effdataE").val("");
+					   }
+				  }
+		   });
+		  
+	   });
+	  
+	  //备份
+	  $("#dbBack").click(function(){
+		  $.ajax({
+			  type:"GET",
+			  url:'/owep-admin-web-page/user/findUserSession',
+			  dataType: "json",
+			  success: function (data) {
+				  if(data.statusCode == 202){
+				     window.location.href = "/owep-admin-web-page/user/loginUser";
+				     return false;
+				  }//else if(data.statusCode == 200){
+					  Confirm.show('提示', '确定备份吗？', {
+				            '确定': {
+				                'primary': true,
+				                'callback': function() {
+				               	 	Confirm.hide();
+				               	 $("#lodingbg").show();
+				         		$("#lodingimg").show();
+							    	$.ajax({
+							    		traditional: true,
+							            type: "POST",
+							            url: '/owep-admin-web-page/dbBackup/dbBackUpInfo',
+							            dataType: "json",
+							            success: function(data){
+							            	if(data.statusCode == 200){
+							            		$("#example1").DataTable().ajax.reload();
+							            	}else{
+							            		Confirm.show('提示', '备份失败,请检查数据库用户名和密码配置是否正确！');
+							            	}
+							            	$("#lodingbg").hide();
+											$("#lodingimg").hide();
+							              }
+							        });
+				                }
+				            }
+				        });
+				  }
+	         // }  
+		  });
+	  });
+	  
+	  
+   table = $('#example1').DataTable({
+    	"bPaginage": true, //开启分页功能
+        "lengthChange": true,
+        "searching": false, 
+        "info": true,
+        "ordering":false,
+        "autoWidth": false,
+        "language":{
+      	  "sProcessing": "处理中...",
+            "sLengthMenu": "显示 _MENU_ 项结果",
+            "sZeroRecords": "没有匹配结果",
+            "sInfo": "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
+            "sInfoEmpty": "显示第 0 至 0 项结果，共 0 项",
+            "sInfoFiltered": "(由 _MAX_ 项结果过滤)",
+            "sInfoPostFix": "",
+            "sSearch": "搜索:",
+            "sUrl": "",
+            "sEmptyTable": "无相关记录",
+            "sLoadingRecords": "载入中...",
+            "sInfoThousands": ",",
+            "oPaginate": {
+                "sFirst": "首页",
+                "sPrevious": "上页",
+                "sNext": "下页",
+                "sLast": "末页"
+            }
+        },
+        "Processing":true,//是否异步载入未显示表格数据
+        "bProcessing": true, // 是否显示取数据时的那个等待提示
+        "bServerSide": true,//这个用来指明是通过服务端来取数据
+        "sAjaxSource":"/owep-admin-web-page/dbBackup/findBackUpInfo", //指定要从哪个URL获取数据
+	  "columns": [
+             {
+                 "data": "dbcopyId",
+                 "bSortable": false,
+                 "render": function (data, type, full, meta) {
+                     return '<input type="checkbox"  class="checkSub"  value="' + data + '" />';
+                 }
+             },
+             { 
+            	 "data": "filename" 
+             },
+            /*  { 
+           	  "data": "fileurl" 
+             }, */
+             { 
+            	 "data": "createtime", 
+	           		 "render": function (data, type, full, meta) {
+		                   return '<div>' + data + '</div>';
+		               },
+             },
+             { 
+            	 "data": "copystatus",
+            	 "render": function(data,type,full,meta){
+            		 return '<div>' + formatbukpStatus(data) + '</div>';
+            	 }
+              }           
+        ],
+        "columnDefs": [
+                   	{
+    					"targets": [4],
+    					"data": "dbcopyId",
+    					"render": function(data, type, full) {
+    						/*funll全部数据值可以通过属性列名获取 */
+    						return '<button type="button" onclick="delDB('+data+')" data-toggle="tooltip" data-placement="top" title="删除" class="btn_edit_c text-red glyphicon glyphicon-trash" ></button>'
+						       +'<button type="button" onclick="updateDB('+data+')" data-toggle="tooltip" data-placement="top" title="下载" class="btn_edit_c text-purple fa fa-download" ></button>'
+    					}
+    				}
+        ],
+        "fnServerData": function (sSource111, aoData111, fnCallback111) {
+              // aoData.push({ name:"rolename", value: rolename });
+               $.ajax({
+                   type: "POST",
+                   url: sSource111,
+                   dataType: 'json',
+                   async : false,
+                   data:{
+                   	"aoData":JSON.stringify(aoData111),
+                   	"startTime":startTime,
+                   	"endTime":endTime
+                   },
+                   "success": fnCallback111
+               });
+        }
+    });
+  })          
+	
+  //全选
+     $('#checkAll').on('click', function () {
+        if (this.checked) {
+            $('.checkSub').each(function () {
+                this.checked = true;
+            });
+        } else {
+            $('.checkSub').each(function () {
+                this.checked = false;
+            });
+        }
+    });
+  
+  $("select[name='example1_length']").change(function(){
+		sessionForWard();
+	})
+
+	$("#example1_paginate").click(function(){
+		sessionForWard();
+	});
+
+function sessionForWard(){
+	 $.ajax({
+		 type:"GET",
+		  url:'/owep-admin-web-page/user/findUserSession',
+		  dataType: "json",
+		  success: function (data) {
+			  if(data.statusCode == 202){
+				     window.location.href = "/owep-admin-web-page/user/loginUser";
+				  }
+		  }
+	 });
+}
+  
+  
+</script>
+
+
+
+</div>
+
+  <!-- Control Sidebar -->
+  <aside class="control-sidebar control-sidebar-dark">
+    <div class="tab-content">
+      <!-- Home tab content -->
+      <div class="tab-pane" id="control-sidebar-home-tab">
+
+      </div><div id="control-sidebar-theme-demo-options-tab" class="tab-pane active"><div><h4 style="font-family: Source Sans Pro;    font-size: 14px;">&nbsp;&nbsp;&nbsp;主&nbsp;&nbsp;题</h4><hr><ul class="list-unstyled clearfix"><li style="float:left; width: 100%; padding: 5px;"><a href="javascript:void(0);" data-skin="skin-blue" style="display: block; box-shadow: 0 0 3px rgba(0,0,0,0.4)" class="clearfix full-opacity-hover"><div><span style="display:block; width: 20%; float: left; height: 7px; background: #367fa9;"></span><span class="bg-light-blue" style="display:block; width: 80%; float: left; height: 7px;"></span></div><div><span style="display:block; width: 20%; float: left; height: 20px; background: #222d32;"></span><span style="display:block; width: 80%; float: left; height: 20px; background: #f4f5f7;"></span></div></a><p class="text-center no-margin">Blue</p></li><li style="float:left; width: 100%; padding: 5px;"><a href="javascript:void(0);" data-skin="skin-black" style="display: block; box-shadow: 0 0 3px rgba(0,0,0,0.4)" class="clearfix full-opacity-hover"><div style="box-shadow: 0 0 2px rgba(0,0,0,0.1)" class="clearfix"><span style="display:block; width: 20%; float: left; height: 7px; background: #fefefe;"></span><span style="display:block; width: 80%; float: left; height: 7px; background: #fefefe;"></span></div><div><span style="display:block; width: 20%; float: left; height: 20px; background: #222;"></span><span style="display:block; width: 80%; float: left; height: 20px; background: #f4f5f7;"></span></div></a><p class="text-center no-margin">Black</p></li><li style="float:left; width: 100%; padding: 5px;"><a href="javascript:void(0);" data-skin="skin-purple" style="display: block; box-shadow: 0 0 3px rgba(0,0,0,0.4)" class="clearfix full-opacity-hover"><div><span style="display:block; width: 20%; float: left; height: 7px;" class="bg-purple-active"></span><span class="bg-purple" style="display:block; width: 80%; float: left; height: 7px;"></span></div><div><span style="display:block; width: 20%; float: left; height: 20px; background: #222d32;"></span><span style="display:block; width: 80%; float: left; height: 20px; background: #f4f5f7;"></span></div></a><p class="text-center no-margin">Purple</p></li><li style="float:left; width: 100%; padding: 5px;"><a href="javascript:void(0);" data-skin="skin-green" style="display: block; box-shadow: 0 0 3px rgba(0,0,0,0.4)" class="clearfix full-opacity-hover"><div><span style="display:block; width: 20%; float: left; height: 7px;" class="bg-green-active"></span><span class="bg-green" style="display:block; width: 80%; float: left; height: 7px;"></span></div><div><span style="display:block; width: 20%; float: left; height: 20px; background: #222d32;"></span><span style="display:block; width: 80%; float: left; height: 20px; background: #f4f5f7;"></span></div></a><p class="text-center no-margin">Green</p></li><li style="float:left; width: 100%; padding: 5px;"><a href="javascript:void(0);" data-skin="skin-red" style="display: block; box-shadow: 0 0 3px rgba(0,0,0,0.4)" class="clearfix full-opacity-hover"><div><span style="display:block; width: 20%; float: left; height: 7px;" class="bg-red-active"></span><span class="bg-red" style="display:block; width: 80%; float: left; height: 7px;"></span></div><div><span style="display:block; width: 20%; float: left; height: 20px; background: #222d32;"></span><span style="display:block; width: 80%; float: left; height: 20px; background: #f4f5f7;"></span></div></a><p class="text-center no-margin">Red</p></li><li style="float:left; width: 100%; padding: 5px;"><a href="javascript:void(0);" data-skin="skin-yellow" style="display: block; box-shadow: 0 0 3px rgba(0,0,0,0.4)" class="clearfix full-opacity-hover"><div><span style="display:block; width: 20%; float: left; height: 7px;" class="bg-yellow-active"></span><span class="bg-yellow" style="display:block; width: 80%; float: left; height: 7px;"></span></div><div><span style="display:block; width: 20%; float: left; height: 20px; background: #222d32;"></span><span style="display:block; width: 80%; float: left; height: 20px; background: #f4f5f7;"></span></div></a><p class="text-center no-margin">Yellow</p></li><li style="float:left; width: 100%; padding: 5px;"><a href="javascript:void(0);" data-skin="skin-blue-light" style="display: block; box-shadow: 0 0 3px rgba(0,0,0,0.4)" class="clearfix full-opacity-hover"><div><span style="display:block; width: 20%; float: left; height: 7px; background: #367fa9;"></span><span class="bg-light-blue" style="display:block; width: 80%; float: left; height: 7px;"></span></div><div><span style="display:block; width: 20%; float: left; height: 20px; background: #f9fafc;"></span><span style="display:block; width: 80%; float: left; height: 20px; background: #f4f5f7;"></span></div></a><p class="text-center no-margin" style="font-size: 12px">Blue Light</p></li><li style="float:left; width: 100%; padding: 5px;"><a href="javascript:void(0);" data-skin="skin-black-light" style="display: block; box-shadow: 0 0 3px rgba(0,0,0,0.4)" class="clearfix full-opacity-hover"><div style="box-shadow: 0 0 2px rgba(0,0,0,0.1)" class="clearfix"><span style="display:block; width: 20%; float: left; height: 7px; background: #fefefe;"></span><span style="display:block; width: 80%; float: left; height: 7px; background: #fefefe;"></span></div><div><span style="display:block; width: 20%; float: left; height: 20px; background: #f9fafc;"></span><span style="display:block; width: 80%; float: left; height: 20px; background: #f4f5f7;"></span></div></a><p class="text-center no-margin" style="font-size: 12px">Black Light</p></li><li style="float:left; width: 100%; padding: 5px;"><a href="javascript:void(0);" data-skin="skin-purple-light" style="display: block; box-shadow: 0 0 3px rgba(0,0,0,0.4)" class="clearfix full-opacity-hover"><div><span style="display:block; width: 20%; float: left; height: 7px;" class="bg-purple-active"></span><span class="bg-purple" style="display:block; width: 80%; float: left; height: 7px;"></span></div><div><span style="display:block; width: 20%; float: left; height: 20px; background: #f9fafc;"></span><span style="display:block; width: 80%; float: left; height: 20px; background: #f4f5f7;"></span></div></a><p class="text-center no-margin" style="font-size: 12px">Purple Light</p></li><li style="float:left; width: 100%; padding: 5px;"><a href="javascript:void(0);" data-skin="skin-green-light" style="display: block; box-shadow: 0 0 3px rgba(0,0,0,0.4)" class="clearfix full-opacity-hover"><div><span style="display:block; width: 20%; float: left; height: 7px;" class="bg-green-active"></span><span class="bg-green" style="display:block; width: 80%; float: left; height: 7px;"></span></div><div><span style="display:block; width: 20%; float: left; height: 20px; background: #f9fafc;"></span><span style="display:block; width: 80%; float: left; height: 20px; background: #f4f5f7;"></span></div></a><p class="text-center no-margin" style="font-size: 12px">Green Light</p></li><li style="float:left; width: 100%; padding: 5px;"><a href="javascript:void(0);" data-skin="skin-red-light" style="display: block; box-shadow: 0 0 3px rgba(0,0,0,0.4)" class="clearfix full-opacity-hover"><div><span style="display:block; width: 20%; float: left; height: 7px;" class="bg-red-active"></span><span class="bg-red" style="display:block; width: 80%; float: left; height: 7px;"></span></div><div><span style="display:block; width: 20%; float: left; height: 20px; background: #f9fafc;"></span><span style="display:block; width: 80%; float: left; height: 20px; background: #f4f5f7;"></span></div></a><p class="text-center no-margin" style="font-size: 12px">Red Light</p></li><li style="float:left; width: 100%; padding: 5px;"><a href="javascript:void(0);" data-skin="skin-yellow-light" style="display: block; box-shadow: 0 0 3px rgba(0,0,0,0.4)" class="clearfix full-opacity-hover"><div><span style="display:block; width: 20%; float: left; height: 7px;" class="bg-yellow-active"></span><span class="bg-yellow" style="display:block; width: 80%; float: left; height: 7px;"></span></div><div><span style="display:block; width: 20%; float: left; height: 20px; background: #f9fafc;"></span><span style="display:block; width: 80%; float: left; height: 20px; background: #f4f5f7;"></span></div></a><p class="text-center no-margin" style="font-size: 12px;">Yellow Light</p></li></ul></div></div>
+    </div>
+  </aside>
+  <!-- /.control-sidebar -->
+  <!-- Add the sidebar's background. This div must be placed
+       immediately after the control sidebar -->
+  <div class="control-sidebar-bg" style="position: fixed; height: auto;"></div>
+
+</div>
+
+<!--  个人设置 -->
+<div class="modal fade" id="myModalPerson" tabindex="-1" role="dialog" aria-labelledby="myModalLabelHead">
+        <div class="modal-dialog" id="dialog_wedth" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title" id="myModalLabelHead">个人设置</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" id="myFormm" role="form" novalidate="novalidate">
+                    <input type="hidden" class="form-control" id="userId" value="126">
+                    <input type="hidden" class="form-control" id="odluserEmail" value="huangfei1230@sina.com">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">姓&nbsp;&nbsp;&nbsp;&nbsp;名：</label>
+                            <div class="col-sm-10">
+                                 admin
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">用户名：</label>
+                            <div class="col-sm-10">
+                             
+                                   admin
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">性&nbsp;&nbsp;&nbsp;&nbsp;别：</label>
+                             <div class="col-sm-10">
+                                男   
+                                                         
+                            </div>
+                        </div>
+                       <div class="form-group">
+	                        <label class="col-sm-2 control-label">有效期：</label>
+	                        <div class="col-sm-10">
+	                             2111-01-30 00:00:00.0
+	                        </div>
+	                    </div>
+	                      <div class="form-group">
+                            <label class="col-sm-2 control-label">密&nbsp;&nbsp;码：</label>
+                            <div class="col-sm-10">
+                                <input type="password" class="form-control" id="userpwd" name="userpwd" placeholder="请输入密码">
+                            </div>
+                        </div>
+                         <div class="form-group">
+                            <label class="col-sm-2 control-label">新密码：</label>
+                            <div class="col-sm-10">
+                                <input type="password" class="form-control" id="newPwdOne" name="newPwdOne" placeholder="请输入新密码">
+                            </div>
+                        </div>
+                           <div class="form-group">
+                            <label class="col-sm-2 control-label">新密码：</label>
+                            <div class="col-sm-10">
+                                <input type="password" class="form-control" id="newPwdTwo" name="newPwdTwo" placeholder="请输入新密码">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">手&nbsp;&nbsp;&nbsp;&nbsp;机：</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="userphone" name="userphone" placeholder="请输入手机号" value="13151746899">
+                                 <input type="hidden" id="olduserphone" name="olduserphone" value="13151746899">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">邮&nbsp;&nbsp;&nbsp;&nbsp;箱：</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="useremail" name="useremail" placeholder="请输入邮箱" value="huangfei1230@sina.com">
+                                 <input type="hidden" name="olduseremail" id="olduseremail" value="huangfei1230@sina.com">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" value="admin" id="userName" name="userName">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>关闭</button>
+                    <button type="button" id="btn_submit" class="btn btn-primary"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>修改</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 头像设置 -->
+    <div class="modal fade" id="txModalPerson" tabindex="-1" role="dialog" aria-labelledby="txmyModalLabelHead">
+        <div class="modal-dialog" id="dialog_wedth" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title" id="txmyModalLabelHead">个人设置</h4>
+                </div>
+                <div class="modal-body">
+                   <div class="form-group">
+					  <label>头像设置:</label>
+		              <input type="button" name="2" value="裁剪图片"><!-- id="userTp" -->
+			       </div>
+                   <div class="form-group">
+                   		<!-- src="/owep-admin-web-page/user/getImage?imageUrl=c:/opt/image/owepWeb/admin.jpg&0.5109007929717825" ↓-->
+                       <img id="userImage" src="./智慧教育平台_files/getImage" style="width:100px;height:100px;background:rgb(235,235,235);">
+                       <img id="user_logo" src="http://192.168.1.106:8082/owep-admin-web-page/user/index" style="width:100px;height:100px;background:rgb(235,235,235);display:none">
+                   </div>
+                </div>
+                <!-- <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>关闭</button>
+                    <button type="button" id="btn_submit" class="btn btn-primary"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>修改</button>
+                </div> -->
+            </div>
+        </div>
+    </div>
+    
+    
+    
+    <!-- 图片裁剪 -->
+<div class="modal fade" id="myModalHead" tabindex="-1" role="dialog" aria-labelledby="myModalLabelHead">
+  <div class="modal-dialog" style="width:1000px" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+        <h4 class="modal-title" id="myModalLabelHead">图片裁剪</h4>
+      </div>
+      <div class="modal-body">
+          <div style="width: 500px;height: 500px">
+            <div class="container">
+              <div class="imageBox">
+                <div class="thumbBoxHead"></div>
+                <div class="spinner" style="">Loading...</div>
+              </div>
+              <div class="action">
+                <input type="file" id="fileHead" name="myFileHead" style="float:left; width: 250px">
+                <input type="button" id="btnCrop" value="裁剪" style="float: right">
+                <input type="button" id="btnZoomIn" value="+" style="float: right">
+                <input type="button" id="btnZoomOut" value="-" style="float: right">
+              </div>
+              <div class="cropped">
+              </div>
+               <lable style="display: none;"><font color="red">所选的文件格式不符合上传要求,只能上传JPG/JPEG/PNG/GIF图片格式</font></lable>
+            </div>
+            <div style="margin:12px auto auto 85px;">
+              <img id="img_showHead" src="http://192.168.1.106:8082/owep-admin-web-page/user/index" style="width: 100px;height: 100px;">
+            </div>
+          </div>
+      </div>
+
+      <div class="modal-footer">
+      <!-- 获取用户id -->
+        <input type="hidden" id="txUserId" name="txUserId" value="126">
+        <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>关闭</button>
+        <button type="button" id="btn_submitImage" class="btn btn-primary" data-dismiss="modal"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>保存</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- 消息列表弹窗 -->
+<div class="modal fade" id="toSeeAllMessage" tabindex="-1" role="dialog" aria-labelledby="txmyModalLabelHead">
+    <div class="modal-dialog" id="dialog_wedth" role="document" style="width:80%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                <h4 class="modal-title" id="txmyModalLabelHead">历史消息</h4>
+            </div>
+            <div class="modal-body">
+                <table id="example1" class="table table-bordered table-striped">
+	                <thead>
+	                <tr>
+	                    <th>序号</th>
+	                    <th>发送者</th>
+	                    <th>标题</th>
+	                    <th>内容</th>
+	                    <th style="width:105px;">时间</th>
+	                    <th>状态</th>
+	                    <th>操作</th>
+	                </tr>
+	                </thead>
+	                <tbody>
+	                </tbody>
+	            </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 消息详情弹窗 -->
+<div class="modal fade" id="messageDetail" tabindex="-1" role="dialog" aria-labelledby="txmyModalLabelHead">
+    <div class="modal-dialog" id="dialog_wedth" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                <h4 class="modal-title" id="messageDetailTitle">反馈建议</h4>
+            </div>
+            <div id="messageDetailBody" class="modal-body">
+               
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- jQuery 2.2.3 -->
+<script src="./智慧教育平台_files/jquery-2.2.3.min.js.下载"></script>
+
+<script src="./智慧教育平台_files/jquery.jqprint-0.3.js.下载"></script>
+
+<script src="./智慧教育平台_files/jquery-migrate-1.1.1.js.下载"></script>
+
+<!--<script src="plugins/jQuery/jquery.PrintArea.js"></script>-->
+<!-- Bootstrap 3.3.6 -->
+<script src="./智慧教育平台_files/bootstrap.min.js.下载"></script>
+<!-- FastClick -->
+<script src="./智慧教育平台_files/fastclick.js.下载"></script>
+<!-- AdminLTE App -->
+<script src="./智慧教育平台_files/app.js.下载"></script>
+<!-- Sparkline -->
+<script src="./智慧教育平台_files/jquery.sparkline.min.js.下载"></script>
+<!-- jvectormap -->
+<script src="./智慧教育平台_files/jquery-jvectormap-1.2.2.min.js.下载"></script>
+<script src="./智慧教育平台_files/jquery-jvectormap-world-mill-en.js.下载"></script>
+<!-- SlimScroll 1.3.0 -->
+<script src="./智慧教育平台_files/jquery.slimscroll.min.js.下载"></script>
+<!-- ChartJS 1.0.1 -->
+<script src="./智慧教育平台_files/Chart.min.js.下载"></script>
+<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+<!--<script src="dist/js/dashboard2.js"></script>-->
+<!-- AdminLTE for demo purposes -->
+<script src="./智慧教育平台_files/demo.js.下载"></script>
+<!-- jQuery Knob -->
+<script src="./智慧教育平台_files/jquery.knob.js.下载"></script>
+
+<!--图片裁剪-->
+<script src="./智慧教育平台_files/cropbox.js.下载"></script>
+<!-- 通用js -->
+<!-- <script type="text/javascript" charset="utf-8" src="../dist/js/commonValidate.js"></script> -->
+<script type="text/javascript" charset="utf-8" src="./智慧教育平台_files/commonDate.js.下载"></script>
+<!-- 弹出层 -->
+<script type="text/javascript" charset="utf-8" src="./智慧教育平台_files/confirm.js.下载"></script>
+<!-- 验证 -->
+
+<script type="text/javascript" charset="utf-8" src="./智慧教育平台_files/jquery.validate.min.js.下载"></script>
+<script type="text/javascript" charset="utf-8" src="./智慧教育平台_files/messages_zh.js.下载"></script>
+<!-- 时间控件 -->
+<script type="text/javascript" charset="utf-8" src="./智慧教育平台_files/laydate.js.下载"></script>
+<!-- 选择搜索 -->
+<script type="text/javascript" src="./智慧教育平台_files/bootstrap-select.min.js.下载"></script>
+<script src="./智慧教育平台_files/jquery.dataTables.min.js.下载"></script>
+<script src="./智慧教育平台_files/dataTables.bootstrap.min.js.下载"></script>
+<script type="text/javascript" src="./智慧教育平台_files/bootstrap-datetimepicker.js.下载" charset="UTF-8"></script>
+<script type="text/javascript" src="./智慧教育平台_files/bootstrap-datetimepicker.zh-CN.js.下载" charset="UTF-8"></script>
+
+<script>
+
+  $(document).ready(function(){
+	  $("lable").hide();
+	  $("#txuserimg2").hide();
+	  $("#imgcircle1").show();
+	 
+	  var imageUser="c:/opt/image/owepWeb/admin.jpg";
+		 if(imageUser != null && imageUser!=""){
+			 $("#user_logo").attr("style","width:100px;height:100px;background:rgb(235,235,235);display:none");
+		 }else{
+			$("#userImage").attr("style","width:100px;height:100px;background:rgb(235,235,235);display:none");
+			 $("#user_logo").attr("style","width:100px;height:100px;background:rgb(235,235,235);display:block");
+			 $("#imgcircle2").show();
+		 } 
+  });
+
+$("#btn_submitImage").click(function () {
+	 $("#txuserimg").hide();
+	 $("#txuserimg2").show();
+	  $("#imgcircle1").hide();
+	  $("#imgcircle2").show();
+	var imgStr = $("#img_showHead").attr("src");
+	var txUserId = $("#txUserId").val();
+//	$("#user_logo").attr("src","imgStr");
+	$.ajax({
+        type: 'post',
+        url: '/owep-admin-web-page/user/uploadImg',
+        dataType: 'json',
+        cache:false,
+        data:{
+        	imgStr :imgStr,
+        	txUserId:txUserId
+        },
+        success: function (result) {
+        }
+        }); 
+});
+
+
+
+$(function() {
+  $("#imageType").val();
+  $("#btn_add1").click(function () {
+    $("#myModalLabelHead").text("图片裁剪");
+    $('#myModalHead').modal();
+    var imageType = $(this).attr("name");
+    $("#imageType").val(imageType);
+  });
+  $("#userTp").click(function () {
+	 // $("#img_show").attr("src");
+    $("#myModalLabelHead").text("图片裁剪");
+    $('#myModalHead').modal();
+    var imageType = $(this).attr("name");
+    $("#imageType").val(imageType);
+  });
+  var options =
+  {
+    thumbBox: '.thumbBoxHead',
+    spinner: '.spinner',
+    imgSrc: ''
+  }
+  var cropper = $('.imageBox').cropbox(options);
+  $('#fileHead').on('change', function(){
+     $(".imageBox").attr("style","");
+    //图片格式验证
+     var filepath=$("input[name='myFileHead']").val();
+    var extStart=filepath.lastIndexOf(".");
+    var ext=filepath.substring(extStart,filepath.length).toUpperCase();
+    if(ext ==".PNG" || ext ==".GIF" || ext ==".JPG" || ext ==".JPEG"){
+  	 $("lable").hide();
+  	 $("#btn_submitImage").removeAttr("disabled");
+    }else{
+  	  $("lable").show();
+  	  $("#btn_submitImage").attr("disabled","disabled");
+  	 return false;
+    } 
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      options.imgSrc = e.target.result;
+      cropper = $('.imageBox').cropbox(options);
+    }
+    reader.readAsDataURL(this.files[0]);
+//    this.files = [];
+  })
+  $('#btnCrop').on('click', function(){
+    var img = cropper.getDataURL();
+//    $('.cropped').append('<img src="'+img+'">');
+    $("#img_showHead").attr("src",img);
+  })
+  $('#btnZoomIn').on('click', function(){
+    var img = cropper.getDataURL();
+    $("#img_showHead").attr("src",img);
+    cropper.zoomIn();
+  })
+  $('#btnZoomOut').on('click', function(){
+    var img = cropper.getDataURL();
+    $("#img_showHead").attr("src",img);
+    cropper.zoomOut();
+  });
+  //鼠标按下事件
+  $('.imageBox').mousedown(function(){
+    var img = cropper.getDataURL();
+    $("#img_showHead").attr("src",img);
+  });
+  //鼠标移动事件
+  $('.imageBox').mousemove(function(){
+    var img = cropper.getDataURL();
+    $("#img_showHead").attr("src",img);
+  });
+  //鼠标松开事件
+  $('.imageBox').mouseup(function(){
+    var img = cropper.getDataURL();
+    $("#img_showHead").attr("src",img)
+  });
+
+  $('.imageBox').mousewheel(function(){
+    var img = cropper.getDataURL();
+    $("#img_showHead").attr("src",img);
+  });
+
+  $("#btn_submitImage").click(function () {
+    var label = $("lable").attr("type");
+    var img = cropper.getDataURL();
+    $("#user_logo").attr("src",img);
+    $("#txuserimg2").attr("src",img);
+    $("#imgcircle2").attr("src",img);
+    $("#userImage").attr("style","width:100px;height:100px;background:rgb(235,235,235);display:none");
+	 $("#user_logo").attr("style","width:100px;height:100px;background:rgb(235,235,235);display:block");
+  });
+
+});
+
+
+$(document).ready(function(){
+	validatePerson();
+});
+
+function validatePerson() {
+	// 手机号码验证 
+	jQuery.validator.addMethod("isMobile", function(value, element) { 
+	  var length = value.length; 
+	  var mobile = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(17[0-9]{1}))+\d{8})$/; 
+	  return this.optional(element) || (length == 11 && mobile.test(value)); 
+	}, "请正确填写您的手机号码"); 
+	
+	
+	   var returnMsg=true;  
+	   $.validator.addMethod("checkPhone",function(value,element){   
+		 //获取用户新输入的手机号码
+			var newPhone = $.trim($("#userphone").val());
+			var oldPhone =$.trim($("#olduserphone").val());
+			var userId =$("#userId").val();
+	      //如果两上密码相等,说明用户没有进行密码修改,则不进行唯一性验证,如果不等说明用户设置了新密码,对数据进行唯一性验证
+			if(newPhone != oldPhone){
+				//通过ajax进行请求,如果数据库数据不存在则返回true,否则返回false,说明用户输入的手机号码已在数据库中存,对用户进行提醒
+	        $.ajax({
+		        type:"post",
+		        url:"/owep-admin-web-page/user/isUserPhone",    
+		        data:{ 
+		        	userphone:newPhone,
+		        	userId:userId
+		        	},
+		        dataType:"JSON",
+		        success:function(data){    
+		        	if(data.result == true){
+			        	   returnMsg=false; 
+		            }else if(data.result == false){
+		            	 returnMsg=true; 
+		            }   
+		        }}); 
+			}else{
+		           returnMsg =true;  
+			}
+	      return returnMsg;
+	     },"此手机号码已经被占用");
+	
+	//邮箱自定义验证
+	   var returnEmail=true;  
+	   $.validator.addMethod("checkEmail",function(value,element){   
+	        //var i =0;
+		 //获取用户新输入的手机号码
+			var newEmail = $.trim($("#useremail").val());
+		    var oldEmail =$.trim($("#olduseremail").val());
+			var userId =$("#userId").val();
+	      //如果两上密码相等,说明用户没有进行密码修改,则不进行唯一性验证,如果不等说明用户设置了新密码,对数据进行唯一性验证
+			if(newEmail != oldEmail){
+				//通过ajax进行请求,如果数据库数据不存在则返回true,否则返回false,说明用户输入的手机号码已在数据库中存,对用户进行提醒
+	        $.ajax({
+		        type:"post",
+		        url:"/owep-admin-web-page/user/isUserPhone",    
+		        data:{ 
+		        	useremail:newEmail,
+		        	userId:userId
+		        	},
+		        dataType:"JSON",
+		        success:function(data){    
+		        	if(data.result == true){
+		        		returnEmail=false; 
+		            }else if(data.result == false){
+		            	returnEmail=true; 
+		            }   
+		        }}); 
+			}else{
+				returnEmail =true;  
+			}
+	      return returnEmail;
+	     },"邮箱已被占用");
+	
+	
+	
+	$('#myFormm').validate({
+		rules :{
+			userpwd :{
+				   required: true,
+	               minlength : 6,
+	               maxlength:15,
+	               remote : {
+	                    url : "../user/findUserPwd",
+	                    type : "get",
+	                    dataType : "json",
+	                    data:{
+	                    	userPwd :function(){ return $('#userpwd').val();},
+	                        userId : function(){ return $("#userId").val();},
+	                        userName : function(){ return $("#userName").val();}
+	                    }
+	                }
+			},
+		/* 	username :{
+				required: true,
+	            maxlength:15,
+	            minlength : 2
+			}, */
+			newPwdOne:{
+			 //  required: true,
+               minlength : 6,
+               maxlength:15
+			},
+			newPwdTwo:{
+				  // required: true,
+	               minlength : 6,
+	               maxlength:15,
+	               equalTo: "#newPwdOne"
+				},
+		  userphone : {
+      	   		minlength : 11,
+         		maxlength : 11,
+         		isMobile : true,
+         		checkPhone : true
+          },
+          useremail : {
+        	    email: true,
+         		maxlength : 30,
+         		checkEmail:true
+          }
+		},messages:{
+			 userpwd : {
+		           	required: '密码不能为空',
+		           	minlength:'密码不能小于6位',
+		            maxlength: '密码不能大于15位字符',
+		            remote : "输入的密码不正确"
+	           },
+	          /*  username :{
+	               required: '用户名不能为空',
+	               maxlength: '用户名不能大于15位字符',
+	               minlength:'用户名不能小于2位'
+	            }, */
+	            newPwdOne:{
+	            	//required: '新密码不能为空',
+		           	minlength:'新密码不能小于6位',
+		            maxlength: '新密码不能大于15位字符'
+	            },
+	            newPwdTwo:{
+	            	//required: '新密码不能为空',
+		           	minlength:'新密码不能小于6位',
+		            maxlength: '新密码不能大于15位字符',
+		            equalTo: "两次密码不一致"
+	            },
+	            userphone :{
+		          	minlength:'手机号不能小于11位',
+		            maxlength : '手机号不能大于11位字符',
+		            isMobile : '请输入正确的手机号',
+		            checkPhone: '此手机号码已经被占用'
+	           },
+	           useremail : {
+	        	   	email: "请输入一个正确的邮箱",
+	         		maxlength : '邮箱不能大于30位字符',
+	         		checkEmail:'邮箱已被占用'
+	           }
+		},
+        errorElement: "em", //可以用其他标签，记住把样式也对应修改
+        success: function(label) {
+            //label指向上面那个错误提示信息标签em
+            label.text(" ")        //清空错误提示消息
+              .addClass("success");  //加上自定义的success类
+          }
+	});
+}
+
+
+  function personal(){
+	  $("#myModalLabelHead").text("个人设置");
+      $('#myModalPerson').modal();
+  }
+  
+  var noticeTable=null;
+  function txPersonal(){
+	 $('#txModalPerson').modal();
+  }
+  //查看消息列表
+  function toSeeAllMessage(){
+	  if(noticeTable==null){
+		  initNoticeTable();
+	  }else{
+		  noticeTable.ajax.reload();
+	  }
+  }
+  //查看消息详情
+  function messageDetail(noticeId){	  
+	  //根据noticeId查询消息详情
+	  $.ajax({
+		 type:'post',
+		 dataType:'json',
+		 data:{
+			 noticeId:noticeId
+		 },
+		 url:'/owep-admin-web-page/user/findNotice',
+		 success:function(data){
+			 if(data.statusCode==200){
+				 $("#messageDetailTitle").text(data.result.title);
+				 $("#messageDetailBody").html(data.result.content);
+				 $("#messageDetail").modal();
+				 //接收消息
+				 receiveMSG();
+				 if(noticeTable==null){
+					  initNoticeTable();
+				  }else{
+					  noticeTable.ajax.reload();
+				  }
+			 }else{
+				 Cofirm.show("提示","获取信息失败！请重试！");				 
+			 }
+		 },
+		 error:function(){
+			 Confirm.show("提示","系统出错!获取消息失败！");
+		 }
+	  });
+  }
+  
+  $("#btn_submit").click(function(){
+		var r = $('#myFormm').valid(); // 判断验证结果
+		 if(!r){
+    		return;
+    	} 
+    	//获取
+    	var userId =$("#userId").val();
+    	var userpwd = $("#userpwd").val();
+    	var username =$("#userName").val()
+    	var newPwdOne =$("#newPwdOne").val();
+    	//var newPwdTwo =$("#newPwdTwo").val();
+    	var userphone = $("#userphone").val();
+    	var useremail=$("#useremail").val();
+    	$.ajax({
+            type: "POST",
+            url: '/owep-admin-web-page/user/updatePersonUser',
+            data: {
+            	userpwd:userpwd,
+            	username:username,
+            	newPwdOne:newPwdOne,
+            	userphone:userphone,
+            	useremail:useremail,
+            	userId:userId
+            	},
+            dataType: "json",
+            success: function(data){
+            	if(data.statusCode == 200){
+            		Confirm.show('提示', '更新成功！')
+            		$('#myModalPerson').modal("toggle");
+	            	table.ajax.reload();
+            	}else{
+            		Confirm.show('提示', '更新失败！')
+            	}
+              }
+        });
+  });
+
+
+  $(function () {
+	  $.ajax({
+		  type:"GET",
+		  url:'/owep-admin-web-page/system/toSystemDirect',
+		  /* contentType: "application/json; charset=utf-8",
+		  dataType: "json", */
+		  success: function (data) {
+			  $("#ifram").html(data);
+          },
+          error: function (msg) {
+              alert(msg);
+          }		  
+	  });	 
+	  //接收消息
+	  receiveMSG();
+  });
+  function receiveMSG(){
+	//发送接收消息请求
+	  	$.ajax({
+	  		type:'post',
+	  		dataType:'json',
+	  		url:'/owep-admin-web-page/user/sendMsg',
+	  		data:{
+	  			userId:null	//userId为null表示为当前用户自己推送消息
+	  		},
+	  		success:function(data){
+	  			if(data.statusCode!=200){
+	  				Confirm.show("提示","接收信息出错！");
+	  			}
+	  		},
+	  		error:function(){
+	  			Confirm.show("提示","系统出错！接收消息失败！");
+	  		}
+	  	});
+  }
+//初始化table
+	function initNoticeTable(){		
+		noticeTable = $('#example1').DataTable({
+	        "paging": true,
+	        "lengthChange": true,
+	        "searching": false,
+	        "ordering": false,
+	        "info": true,
+	        "autoWidth": false,
+	        "language":{
+	        	  "sProcessing": "处理中...",
+	              "sLengthMenu": "显示 _MENU_ 项结果",
+	              "sZeroRecords": "没有匹配结果",
+	              "sInfo": "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
+	              "sInfoEmpty": "显示第 0 至 0 项结果，共 0 项",
+	              "sInfoFiltered": "(由 _MAX_ 项结果过滤)",
+	              "sInfoPostFix": "",
+	              "sSearch": "搜索:",
+	              "sUrl": "",
+	              "sEmptyTable": "无相关记录",
+	              "sLoadingRecords": "载入中...",
+	              "sInfoThousands": ",",
+	              "oPaginate": {
+	                  "sFirst": "首页",
+	                  "sPrevious": "上页",
+	                  "sNext": "下页",
+	                  "sLast": "末页"
+	              }
+	          },
+	        "bProcessing": false, // 是否显示取数据时的那个等待提示
+	        "bServerSide": true,//这个用来指明是通过服务端来取数据
+	        "sAjaxSource": "/owep-admin-web-page/user/findNoticeList",//这个是请求的地址
+	        "columns": [
+	            {
+	                "sClass": "text-center",
+	                "data": "null",
+	                "render" : function(data, type, full, meta){  
+	                	return meta.row + 1 + meta.settings._iDisplayStart; 
+	                },
+	                "bSortable": false
+	            },
+	            { 
+	            	"data": "fromUsername",
+	            	"render":function(data, type, row, meta){
+	            		if(row.fromUserId==-1){
+	            			return "系统";
+	            		}else{
+	            			return data;
+	            		}
+	            	}
+	            },
+	            { 
+	            	"data": "title",
+	            	"render": function (data, type, row, meta) {
+	                	if(data.length>8){
+	                		return '<a href="javascript:messageDetail('+row.noticeId+')" title="'+data+'">'+data.substring(0,6)+'...</a>'
+	                	}else{
+		                    return '<a href="javascript:messageDetail('+row.noticeId+')" title="'+data+'">'+data+'</a>';	                		
+	                	}
+	                },
+	                "bSortable": false
+	            },
+	            {
+	                "data": "content",
+	                "render": function (data, type, row, meta) {
+	                	if(data.length>20){
+	                		if(row.isRead==1){
+	                			return '<a href="javascript:messageDetail('+row.noticeId+')" title="'+data+'">'+data.substring(0,18)+'...</a>'
+	                		}else{
+	                			return '<span style="color:#dd4b39;font-size:6px;margin-right:15px;" class="fa fa-circle"></span><a href="javascript:messageDetail('+row.noticeId+')" title="'+data+'">'+data.substring(0,18)+'...</a>'
+	                		}	                		
+	                	}else{
+	                		if(row.isRead==1){
+	                			return '<a href="javascript:messageDetail('+row.noticeId+')" title="'+data+'">'+data+'</a>';
+	                		}else{
+	                			return '<span style="color:#dd4b39;font-size:6px;margin-right:15px;" class="fa fa-circle"></span><a href="javascript:messageDetail('+row.noticeId+')" title="'+data+'">'+data+'</a>';
+	                		}
+		                    	                		
+	                	}
+	                },
+	                "bSortable": false
+	            },
+	            { 
+	            	"data": "createtime",
+            		"render": function (data, type, full, meta) {
+	                    return '<div>' + formatDate(data,true) + '</div>';
+	                },
+	                "bSortable": false
+	            },
+	            { 
+	            	"data": "isRead",
+	            	"render": function (data, type, full, meta) {
+	            		if(data==1){
+	            			return "已读";
+	            		}else{
+	            			return "未读";
+	            		}
+	                },
+	                "bSortable": false
+	            },	            
+	            {
+	                "sClass": "text-center",
+	                "data": "noticeId",
+	                "render": function (data, type, full, meta) {
+	                	return '<button type="button" onclick="del_notice('+data+')" data-toggle="tooltip" data-placement="top" title="删除" class="btn_edit_c text-red glyphicon glyphicon-trash" ></button>';
+	                },
+	                "bSortable": false
+	            }
+	        ],
+	        "fnServerData": retrieveData // 获取数据的处理函数
+	    });
+		
+	}
+	// 3个参数的名字可以随便命名,但必须是3个参数,少一个都不行
+	function retrieveData( sSource111,aoData111, fnCallback111) {		
+	    $.ajax({
+	        url : sSource111,//这个就是请求地址对应sAjaxSource
+	        data : {
+	        	"aoData":JSON.stringify(aoData111),//这个是把datatable的一些基本数据传给后台,比如起始位置,每页显示的行数
+	        },
+	        type : 'post',
+	        dataType : 'json',
+	        async : false,
+	        success : function(result) {	        	
+	        	$("#toSeeAllMessage").modal();
+	            fnCallback111(result);//把返回的数据传给这个方法就可以了,datatable会自动绑定数据的
+	        },
+	        error : function(msg) {
+	        }
+	    });
+	}
+	//删除消息
+	function del_notice(noticeId){
+		Confirm.show('提示', '确定删除吗？', {
+            '确定': {
+                'primary': true,
+                'callback': function() {
+               		Confirm.hide();
+               		$.ajax({
+            			type:'post',
+            			dataType:'json',
+            			url:'/owep-admin-web-page/user/delNotice',
+            			data:{
+            				noticeId:noticeId
+            			},
+            			success:function(data){
+            				if(data.statusCode==200){
+            					noticeTable.ajax.reload();
+            					Confirm.show("提示","删除成功！")
+            				}else{
+            					Confirm.show("提示","删除失败！请重试！");
+            				}
+            			},
+            			error:function(){
+            				Confirm.show("提示","系统出错！删除失败！");
+            			}
+            		});
+                }
+            }
+        });		
+	}
+	
+	
+  function view(pageview) {
+	  
+	   $.ajax({
+		  type:"GET",
+		  url:'/owep-admin-web-page/user/findUserSession',
+		  dataType: "json",
+		  success: function (data) {
+			  if(data.statusCode == 202){
+				     window.location.href = "/owep-admin-web-page/user/loginUser";
+				     return false;
+				}
+			  $.ajax({
+				  type:"GET",
+				  url:'/owep-admin-web-page'+pageview,
+				  success: function (data) {
+					  $("#lodingbg").hide();
+					  $("#lodingimg").hide();	
+					  $("#ifram").html(data);
+				  },
+				  error: function (msg) {
+		              alert(msg);
+		          }		  
+			  });
+		  }
+	  }); 
+	  
+  }
+  $(".bandcla").on("click", function(){
+    $(".bandcla").removeClass("active");
+    $(this).addClass("active");
+  });
+  
+  
+  
+  $("#sessionDel").click(function(){
+	  $.ajax({
+		  type:"GET",
+		  url:'/owep-admin-web-page/user/sessionExit',
+		  success: function (data) {
+          }
+	  });
+  })
+  
+  
+  
+</script>
+
+<div id="confirm-modal" class="modal fade role=" dialog"="" tabindex="-1"><div class="modal-dialog modal-sm"><div class="modal-content"><div class="modal-header"><button id="modal-upper-close" class="close modal-close" aria-label="Close" type="button"><span aria-hidden="true">×</span></button><h4 id="modal-title" class="modal-title">Modal Title</h4></div><div id="modal-body" class="modal-body"> Modal Message </div><div id="modal-footer" class="modal-footer"></div></div></div></div><div id="modal-background" class=""></div></body></html>

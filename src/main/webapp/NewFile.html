@@ -1,0 +1,183 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>js下拉菜单</title>
+<style>
+*{margin:0;padding:0;}
+a{text-decoration:none;color:#666;}
+li{list-style:none;}
+body{font-family: "Microsoft Yahei", Arial, Helvetica, sans-serif;font-size:14px;color:#666;text-align:center;background: fff;} /*设置整个页面*/
+#box{width:900px;margin:100px auto 0 auto;text-align:center;background: #48AE15;}
+/*导航条*/
+#nav{width:800px;height:30px;margin:0 auto;line-height:30px;} 
+/*导航条中每一个信息*/
+#nav a{display:block;width:90px;height:30px;text-align:center;color:#FFF;}
+#nav a:hover { background: #fff; color: #000; }
+/*下拉菜单中信息的设置*/
+#nav li ul{display:none;position:absolute;margin-left:-20px;}
+#nav li ul li{clear:both;}
+#nav li ul a{width:120px;border-top:1px solid #FFF;text-align:center;background:#6FE0B2;}
+/*下拉菜单中信息鼠标经过时的样式：改变背景和字体的颜色*/
+#nav li ul li a:hover{background:#48AE15;color:#E06FD3;}
+/*设置每个信息的浮动*/
+#nav li{float:left;}
+/*酒店标题部分的设置*/
+.hotel_title{
+background-color:#6FE0CB;
+width:100px; 
+height:25px;
+float:left;
+padding-top:5px;
+font-size:12px;
+}
+</style>
+<script>
+/*-----显示子菜单-----*/
+function display(li) {
+var subNav = li.getElementsByTagName("ul")[0];/*获取下拉菜单的信息*/
+subNav.style.display = "block"; /*菜单中的信息以块的形式展示*/
+}
+/*-----隐藏子菜单-----*/
+function hide(li) {
+var subNav = li.getElementsByTagName("ul")[0];
+subNav.style.display = "none";/*菜单中的信息不显示*/
+}
+</script>
+</head>
+<body>
+<div id="box"> <!--header的盒子-->
+  <div class="hotel_title">lemon hotel</div><!--酒店名字-->  
+  <div id="nav"> <!--导航栏-->
+    <ul>
+    <!--导航栏中信息，鼠标经过时调用下拉菜单显示-->
+    <li onmouseover="display(this)" onmouseout="hide(this)"> <a href="javascript:;">首页</a>
+        <ul>
+          <li><a href="#">房间预订</a></li>
+          <li><a href="#">查看会员信息</a></li>          
+        </ul>
+      </li>   
+      <li onmouseover="display(this)" onmouseout="hide(this)"> <a href="javascript:;">房间信息</a>
+        <ul>
+
+          <li><a href="#">所有房间</a></li>
+          <li><a href="#">被订房间</a></li>
+          <li><a href="#">录入房间信息</a></li>
+          <li><a href="#">空房</a></li>          
+        </ul>
+      </li>
+      <li onmouseover="display(this)" onmouseout="hide(this)"> <a href="javascript:;">订单</a>
+        <ul>
+          <li><a href="#">录入订单信息</a></li>
+          <li><a href="#">查看订单</a></li>          
+        </ul>
+      </li>
+      <li onmouseover="display(this)" onmouseout="hide(this)"> <a href="javascript:;">房客信息</a>
+        <ul>
+          <li><a href="#">录入房客信息</a></li>
+          <li><a href="#">客史档案</a></li>         
+        </ul>
+      </li>
+      <li onmouseover="display(this)" onmouseout="hide(this)"> <a href="javascript:;">会员</a>
+        <ul>
+          <li><a href="#">录入会员信息</a></li>
+          <li><a href="#">查看会员信息</a></li>          
+        </ul>
+      </li>
+      <li><a href="#">关于柠檬</a></li> 
+       <li><a href="#">登陆</a></li>
+       <li><a href="#">注册</a></li>      
+    </ul>
+  </div>
+  <div id="nav"> <!--导航栏-->
+    <ul>
+    <!--导航栏中信息，鼠标经过时调用下拉菜单显示-->
+    <li onmouseover="display(this)" onmouseout="hide(this)"> <a href="javascript:;">首页</a>
+        <ul>
+          <li><a href="#">房间预订</a></li>
+          <li><a href="#">查看会员信息</a></li>          
+        </ul>
+      </li>   
+      <li onmouseover="display(this)" onmouseout="hide(this)"> <a href="javascript:;">房间信息</a>
+        <ul>
+
+          <li><a href="#">所有房间</a></li>
+          <li><a href="#">被订房间</a></li>
+          <li><a href="#">录入房间信息</a></li>
+          <li><a href="#">空房</a></li>          
+        </ul>
+      </li>
+      <li onmouseover="display(this)" onmouseout="hide(this)"> <a href="javascript:;">订单</a>
+        <ul>
+          <li><a href="#">录入订单信息</a></li>
+          <li><a href="#">查看订单</a></li>          
+        </ul>
+      </li>
+      <li onmouseover="display(this)" onmouseout="hide(this)"> <a href="javascript:;">房客信息</a>
+        <ul>
+          <li><a href="#">录入房客信息</a></li>
+          <li><a href="#">客史档案</a></li>         
+        </ul>
+      </li>
+      <li onmouseover="display(this)" onmouseout="hide(this)"> <a href="javascript:;">会员</a>
+        <ul>
+          <li><a href="#">录入会员信息</a></li>
+          <li><a href="#">查看会员信息</a></li>          
+        </ul>
+      </li>
+      <li><a href="#">关于柠檬</a></li> 
+       <li><a href="#">登陆</a></li>
+       <li><a href="#">注册</a></li>      
+    </ul>
+  </div>
+</div>
+
+
+<div > <!--header的盒子-->
+  <div class="hotel_title">lemon hotel</div><!--酒店名字-->  
+  <div id="nav"> <!--导航栏-->
+    <ul>
+    <!--导航栏中信息，鼠标经过时调用下拉菜单显示-->
+    <li onmouseover="display(this)" onmouseout="hide(this)"> <a href="javascript:;">首页</a>
+        <ul>
+          <li><a href="#">房间预订</a></li>
+          <li><a href="#">查看会员信息</a></li>          
+        </ul>
+      </li>   
+      <li onmouseover="display(this)" onmouseout="hide(this)"> <a href="javascript:;">房间信息</a>
+        <ul>
+
+          <li><a href="#">所有房间</a></li>
+          <li><a href="#">被订房间</a></li>
+          <li><a href="#">录入房间信息</a></li>
+          <li><a href="#">空房</a></li>          
+        </ul>
+      </li>
+      <li onmouseover="display(this)" onmouseout="hide(this)"> <a href="javascript:;">订单</a>
+        <ul>
+          <li><a href="#">录入订单信息</a></li>
+          <li><a href="#">查看订单</a></li>          
+        </ul>
+      </li>
+      <li onmouseover="display(this)" onmouseout="hide(this)"> <a href="javascript:;">房客信息</a>
+        <ul>
+          <li><a href="#">录入房客信息</a></li>
+          <li><a href="#">客史档案</a></li>         
+        </ul>
+      </li>
+      <li onmouseover="display(this)" onmouseout="hide(this)"> <a href="javascript:;">会员</a>
+        <ul>
+          <li><a href="#">录入会员信息</a></li>
+          <li><a href="#">查看会员信息</a></li>          
+        </ul>
+      </li>
+      <li><a href="#">关于柠檬</a></li> 
+       <li><a href="#">登陆</a></li>
+       <li><a href="#">注册</a></li>      
+    </ul>
+  </div>
+  </div>
+
+
+</body>
+</html>

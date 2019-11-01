@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="cn.hd.mapper.IRole">
+	<insert id="addRole">
+		insert into role (SNAME,SDESC,CREATETIME) value (#{SNAME},#{SDESC},#{CREATETIME})
+	</insert>
+	
+	<select id="selectAll" resultType="Role">
+		select * from role 
+	</select>
+	
+	<delete id="delete">
+		delete from role where ID=#{ID}
+	</delete>
+	
+	<insert id="role_menuid">
+		insert into role_memu(RID,MID) value(#{RID},#{MID})
+	</insert>
+	
+	 <resultMap type="Role" id="rolemenuidmap" autoMapping="true">
+		<id property="ID" column="roleid"/>
+	</resultMap> 
+	
+	<select id="roleIdToMenu" resultMap="rolemenuidmap">
+		select *,role.ID roleid  from role,role_memu where role.id = role_memu.RID and role.id = #{RID}
+	</select>
+	
+	<delete id="delete_role_menu_Rid">
+		delete from role_memu where RID = #{RID}
+	</delete>
+	
+	
+	<select id="role_menu_button_id" resultType="java.lang.Integer">
+		select count(*) from role_menu_button where RID = #{RID} and MID=#{MID} and BID=#{BID}
+	</select>
+	
+	<delete id="delete_role_menu_button_roleid_menuid">
+		delete from role_menu_button where RID=#{RID} and MID=#{MID}
+	</delete>
+	
+	<insert id="role_menu_button_roleid_menuid_buttonid">
+		insert into role_menu_button (RID,MID,BID) values(#{RID},#{MID},#{BID})
+	</insert>
+	
+</mapper>
